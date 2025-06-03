@@ -11,17 +11,6 @@
     <description>Builds, tests, and runs the project RSRH.</description>
     <import file="nbproject/build-impl.xml"/>
 
-    <target name="install" description="Use ivy to resolve classpaths">
-    <ivy:cachepath pathid="compile.path">
-      <dependency org="org.hibernate" name="hibernate" rev="3.2.7.ga" conf="default">
-        <exclude org="javax.transaction"/>
-      </dependency>
-
-
-      <!-- https://mvnrepository.com/artifact/io.ebean/ebean -->
-<dependency org="io.ebean" name="ebean" rev="17.0.0-RC3"/>
-    </ivy:cachepath>
-</target>
     <!--
 
     There exist several targets which are by default empty and which can be 
