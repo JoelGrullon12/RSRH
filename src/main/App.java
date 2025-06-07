@@ -50,6 +50,6 @@ public class App {
                 new MainPage().setVisible(true);
             }
         });
-                
+                        
     }
 }
