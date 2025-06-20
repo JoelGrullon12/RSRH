@@ -4,85 +4,27 @@
  */
 package model;
 
-import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
-/**
- *
- * @author Joel Grullon
- */
-@Entity
-@Table(name = "capacitaciones")
-@NamedQueries({
-    @NamedQuery(name = "Capacitaciones.findAll", query = "SELECT c FROM Capacitaciones c"),
-    @NamedQuery(name = "Capacitaciones.findByIdCapacitacion", query = "SELECT c FROM Capacitaciones c WHERE c.idCapacitacion = :idCapacitacion"),
-    @NamedQuery(name = "Capacitaciones.findByNombreCapacitacion", query = "SELECT c FROM Capacitaciones c WHERE c.nombreCapacitacion = :nombreCapacitacion"),
-    @NamedQuery(name = "Capacitaciones.findByDescripcion", query = "SELECT c FROM Capacitaciones c WHERE c.descripcion = :descripcion"),
-    @NamedQuery(name = "Capacitaciones.findByFechaDesde", query = "SELECT c FROM Capacitaciones c WHERE c.fechaDesde = :fechaDesde"),
-    @NamedQuery(name = "Capacitaciones.findByFechaHasta", query = "SELECT c FROM Capacitaciones c WHERE c.fechaHasta = :fechaHasta"),
-    @NamedQuery(name = "Capacitaciones.findByInstitucion", query = "SELECT c FROM Capacitaciones c WHERE c.institucion = :institucion"),
-    @NamedQuery(name = "Capacitaciones.findByEstado", query = "SELECT c FROM Capacitaciones c WHERE c.estado = :estado")})
-public class Capacitacion extends BaseEntity implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id_capacitacion")
-    private Integer idCapacitacion;
-    @Basic(optional = false)
-    @Column(name = "nombre_capacitacion")
+public class Capacitacion {
+    private int idCapacitacion;
     private String nombreCapacitacion;
-    @Column(name = "descripcion")
     private String descripcion;
-    @Column(name = "fecha_desde")
-    @Temporal(TemporalType.DATE)
+    private int nivelId;
     private Date fechaDesde;
-    @Column(name = "fecha_hasta")
-    @Temporal(TemporalType.DATE)
     private Date fechaHasta;
-    @Basic(optional = false)
-    @Column(name = "institucion")
     private String institucion;
-    
-    @JoinColumn(name = "candidato_id", referencedColumnName = "id_candidato")
-    @ManyToOne(optional = false)
-    private Candidato candidatoId;
-    @JoinColumn(name = "nivel_id", referencedColumnName = "id_nivel")
-    @ManyToOne(optional = false)
-    private NivelCapacitacion nivelId;
+    private int candidatoId;
+    private Boolean eliminado;
 
-    public Capacitacion() {
-    }
+    private NivelCapacitacion nivel;
+    private Candidato candidato;
 
-    public Capacitacion(Integer idCapacitacion) {
-        this.idCapacitacion = idCapacitacion;
-    }
-
-    public Capacitacion(Integer idCapacitacion, String nombreCapacitacion, String institucion) {
-        this.idCapacitacion = idCapacitacion;
-        this.nombreCapacitacion = nombreCapacitacion;
-        this.institucion = institucion;
-    }
-
-    public Integer getIdCapacitacion() {
+    public int getIdCapacitacion() {
         return idCapacitacion;
     }
 
-    public void setIdCapacitacion(Integer idCapacitacion) {
+    public void setIdCapacitacion(int idCapacitacion) {
         this.idCapacitacion = idCapacitacion;
     }
 
@@ -100,6 +42,14 @@ public class Capacitacion extends BaseEntity implements Serializable {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public int getNivelId() {
+        return nivelId;
+    }
+
+    public void setNivelId(int nivelId) {
+        this.nivelId = nivelId;
     }
 
     public Date getFechaDesde() {
@@ -126,45 +76,35 @@ public class Capacitacion extends BaseEntity implements Serializable {
         this.institucion = institucion;
     }
 
-    public Candidato getCandidatoId() {
+    public int getCandidatoId() {
         return candidatoId;
     }
 
-    public void setCandidatoId(Candidato candidatoId) {
+    public void setCandidatoId(int candidatoId) {
         this.candidatoId = candidatoId;
     }
 
-    public NivelCapacitacion getNivelId() {
-        return nivelId;
+    public Boolean getEliminado() {
+        return eliminado;
     }
 
-    public void setNivelId(NivelCapacitacion nivelId) {
-        this.nivelId = nivelId;
+    public void setEliminado(Boolean eliminado) {
+        this.eliminado = eliminado;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (idCapacitacion != null ? idCapacitacion.hashCode() : 0);
-        return hash;
+    public NivelCapacitacion getNivel() {
+        return nivel;
     }
 
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Capacitacion)) {
-            return false;
-        }
-        Capacitacion other = (Capacitacion) object;
-        if ((this.idCapacitacion == null && other.idCapacitacion != null) || (this.idCapacitacion != null && !this.idCapacitacion.equals(other.idCapacitacion))) {
-            return false;
-        }
-        return true;
+    public void setNivel(NivelCapacitacion nivel) {
+        this.nivel = nivel;
     }
 
-    @Override
-    public String toString() {
-        return "model.Capacitaciones[ idCapacitacion=" + idCapacitacion + " ]";
+    public Candidato getCandidato() {
+        return candidato;
     }
-    
+
+    public void setCandidato(Candidato candidato) {
+        this.candidato = candidato;
+    }
 }

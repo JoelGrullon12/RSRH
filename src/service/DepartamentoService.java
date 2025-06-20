@@ -5,6 +5,7 @@
 package service;
 
 import data.UnitOfWork;
+import data.repositories.DepartamentoRepository;
 import data.repositories.GenericRepository;
 import java.sql.SQLException;
 import java.util.List;
@@ -19,16 +20,16 @@ import model.Idioma;
 public class DepartamentoService {
     
      private UnitOfWork _uow;
-     private GenericRepository<Departamento> _repo;
+     private DepartamentoRepository _repo;
 
      
      public DepartamentoService() throws SQLException{
          _uow=new UnitOfWork();
-         _repo=_uow.getRepository(Departamento.class);
+         _repo=_uow.departamentos();
      }
      
      public List<Departamento> getAll(){
-         return _repo.getAll();
+         return _repo.findAll();
      }
      
      public Departamento findById(int id){
@@ -37,9 +38,9 @@ public class DepartamentoService {
      
      public boolean insert(Departamento departamento){
          try{
-            boolean result= _repo.insert(departamento);
+            _repo.save(departamento);
             _uow.save();
-            return result;
+            return true;
          }catch(Exception e){
              e.printStackTrace();
              return false;
@@ -48,9 +49,9 @@ public class DepartamentoService {
      
      public boolean update(Departamento departamento){
          try{
-            boolean result= _repo.update(departamento);
+            _repo.update(departamento);
             _uow.save();
-            return result;
+            return true;
          }catch(Exception e){
              e.printStackTrace();
              return false;
@@ -59,9 +60,9 @@ public class DepartamentoService {
      
      public boolean delete(Departamento departamento){
          try{
-            boolean result= _repo.delete(departamento);
+            _repo.delete(departamento.getIdDepartamento());
             _uow.save();
-            return result;
+            return true;
          }catch(Exception e){
              e.printStackTrace();
              return false;

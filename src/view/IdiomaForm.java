@@ -262,7 +262,7 @@ private void limpiarCampos() {
 
     Idioma idioma = idiomaService.findById(id);
     idioma.setNombreIdioma(nuevoNombre);
-    idioma.setNivel(nuevoNivel);
+    //idioma.setNivel(nuevoNivel);
 
     if (idiomaService.update(idioma)) {
         cargarIdiomasEnTabla();
@@ -287,7 +287,7 @@ private void limpiarCampos() {
 
     Idioma idioma = new Idioma();
     idioma.setNombreIdioma(nombre);
-    idioma.setNivel(nivel); 
+    //idioma.setNivel(nivel); 
 
     if (idiomaService.insert(idioma)) {
         cargarIdiomasEnTabla();

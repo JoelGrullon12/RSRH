@@ -11,14 +11,14 @@ import javax.persistence.Column;
  * @author Joel Grullon
  */
 public class BaseEntity {
-    @Column(name = "estado")
-    private Boolean estado;
+    @Column(name = "eliminado")
+    private Boolean eliminado;
     
-    public Boolean getEstado() {
-        return estado;
+    public Boolean getEliminado() {
+        return eliminado;
     }
 
-    public void setEstado(Boolean estado) {
-        this.estado = estado;
+    public void setEliminado(Boolean eliminado) {
+        this.eliminado = eliminado;
     }
 }

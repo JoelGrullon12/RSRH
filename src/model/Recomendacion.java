@@ -4,71 +4,22 @@
  */
 package model;
 
-import java.io.Serializable;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-
-/**
- *
- * @author Joel Grullon
- */
-@Entity
-@Table(name = "recomendaciones")
-@NamedQueries({
-    @NamedQuery(name = "Recomendaciones.findAll", query = "SELECT r FROM Recomendaciones r"),
-    @NamedQuery(name = "Recomendaciones.findByIdRecomendacion", query = "SELECT r FROM Recomendaciones r WHERE r.idRecomendacion = :idRecomendacion"),
-    @NamedQuery(name = "Recomendaciones.findByNombreRecomendador", query = "SELECT r FROM Recomendaciones r WHERE r.nombreRecomendador = :nombreRecomendador"),
-    @NamedQuery(name = "Recomendaciones.findByEmpresa", query = "SELECT r FROM Recomendaciones r WHERE r.empresa = :empresa"),
-    @NamedQuery(name = "Recomendaciones.findByPuesto", query = "SELECT r FROM Recomendaciones r WHERE r.puesto = :puesto"),
-    @NamedQuery(name = "Recomendaciones.findByTelefono", query = "SELECT r FROM Recomendaciones r WHERE r.telefono = :telefono"),
-    @NamedQuery(name = "Recomendaciones.findByEstado", query = "SELECT r FROM Recomendaciones r WHERE r.estado = :estado")})
-public class Recomendacion extends BaseEntity implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id_recomendacion")
-    private Integer idRecomendacion;
-    @Basic(optional = false)
-    @Column(name = "nombre_recomendador")
+public class Recomendacion {
+    private int idRecomendacion;
     private String nombreRecomendador;
-    @Column(name = "empresa")
     private String empresa;
-    @Column(name = "puesto")
     private String puesto;
-    @Column(name = "telefono")
-    private String telefono;
-    @JoinColumn(name = "candidato_id", referencedColumnName = "id_candidato")
-    @ManyToOne(optional = false)
-    private Candidato candidatoId;
+    private String contacto;
+    private int candidatoId;
+    private Boolean eliminado;
 
-    public Recomendacion() {
-    }
+    private Candidato candidato;
 
-    public Recomendacion(Integer idRecomendacion) {
-        this.idRecomendacion = idRecomendacion;
-    }
-
-    public Recomendacion(Integer idRecomendacion, String nombreRecomendador) {
-        this.idRecomendacion = idRecomendacion;
-        this.nombreRecomendador = nombreRecomendador;
-    }
-
-    public Integer getIdRecomendacion() {
+    public int getIdRecomendacion() {
         return idRecomendacion;
     }
 
-    public void setIdRecomendacion(Integer idRecomendacion) {
+    public void setIdRecomendacion(int idRecomendacion) {
         this.idRecomendacion = idRecomendacion;
     }
 
@@ -96,45 +47,35 @@ public class Recomendacion extends BaseEntity implements Serializable {
         this.puesto = puesto;
     }
 
-    public String getTelefono() {
-        return telefono;
+    public String getContacto() {
+        return contacto;
     }
 
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
+    public void setContacto(String contacto) {
+        this.contacto = contacto;
     }
 
-    public Candidato getCandidatoId() {
+    public int getCandidatoId() {
         return candidatoId;
     }
 
-    public void setCandidatoId(Candidato candidatoId) {
+    public void setCandidatoId(int candidatoId) {
         this.candidatoId = candidatoId;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (idRecomendacion != null ? idRecomendacion.hashCode() : 0);
-        return hash;
+    public Boolean getEliminado() {
+        return eliminado;
     }
 
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Recomendacion)) {
-            return false;
-        }
-        Recomendacion other = (Recomendacion) object;
-        if ((this.idRecomendacion == null && other.idRecomendacion != null) || (this.idRecomendacion != null && !this.idRecomendacion.equals(other.idRecomendacion))) {
-            return false;
-        }
-        return true;
+    public void setEliminado(Boolean eliminado) {
+        this.eliminado = eliminado;
     }
 
-    @Override
-    public String toString() {
-        return "model.Recomendaciones[ idRecomendacion=" + idRecomendacion + " ]";
+    public Candidato getCandidato() {
+        return candidato;
     }
-    
+
+    public void setCandidato(Candidato candidato) {
+        this.candidato = candidato;
+    }
 }

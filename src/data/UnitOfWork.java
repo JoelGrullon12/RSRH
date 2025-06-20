@@ -8,6 +8,7 @@ package data;
  *
  * @author Joel Grullon
  */
+import data.repositories.DepartamentoRepository;
 import data.repositories.GenericRepository;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -18,40 +19,21 @@ import model.Idioma;
 
 public class UnitOfWork implements AutoCloseable {
     private final Connection connection;
-    private final Map<Class<?>, GenericRepository<?>> repositories = new HashMap<>();
 
-    private GenericRepository<Idioma> idiomaRepository;
+    private DepartamentoRepository departamentoRepository;
 
      public UnitOfWork() throws SQLException {
         this.connection = MySQL.getConnection();
         this.connection.setAutoCommit(false);
     }
      
-     // Método genérico para obtener un repositorio
-    public <T> GenericRepository<T> getRepository(Class<T> entityClass) {
-        if (!repositories.containsKey(entityClass)) {
-            repositories.put(entityClass, new GenericRepository<>(entityClass, connection));
+    public DepartamentoRepository departamentos() {
+        if(departamentoRepository==null){
+            departamentoRepository=new DepartamentoRepository(connection);
         }
-
-        @SuppressWarnings("unchecked")
-        GenericRepository<T> repo = (GenericRepository<T>) repositories.get(entityClass);
-        return repo;
+        return departamentoRepository;
     }
-
-    public GenericRepository<Idioma> idiomas() {
-        if (idiomaRepository == null) {
-            idiomaRepository = new GenericRepository<Idioma>(Idioma.class, connection);
-        }
-        return idiomaRepository;
-    }
-
-//    public GenericRepository<Usuario> usuarios() {
-//        if (usuarioRepository == null) {
-//            usuarioRepository = new GenericRepository<>(Usuario.class, connection);
-//        }
-//        return usuarioRepository;
-//    }
-
+     
     public void save() throws SQLException {
         connection.commit();
     }
