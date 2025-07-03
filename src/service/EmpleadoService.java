@@ -5,67 +5,86 @@
 package service;
 
 import data.UnitOfWork;
-import data.repositories.DepartamentoRepository;
-import data.repositories.GenericRepository;
-import java.sql.SQLException;
-import java.util.List;
-import model.BaseEntity;
 import model.Departamento;
-import model.Idioma;
 
 /**
  *
  * @author Joel Grullon
  */
-public class DepartamentoService {
-    
-     private UnitOfWork _uow;
-     private DepartamentoRepository _repo;
+import java.sql.SQLException;
+import java.util.List;
+import model.Empleado;
 
-     
-     public DepartamentoService() throws SQLException{
-         _uow=new UnitOfWork();
-         _repo=_uow.departamentos();
-     }
-     
-     public List<Departamento> getAll(){
-         return _repo.findAll();
-     }
-     
-     public Departamento findById(int id){
-         return _repo.findById(id);
-     }
-     
-     public boolean insert(Departamento departamento){
-         try{
-            _repo.save(departamento);
-            _uow.save();
+public class EmpleadoService implements IService<Empleado> {
+
+    @Override
+    public List<Empleado> getAll() {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            return uow.empleados().findAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return List.of();
+        }
+    }
+
+    @Override
+    public Empleado findById(int id) {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            return uow.empleados().findById(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    @Override
+    public boolean insert(Empleado e) {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            uow.empleados().save(e);
+            uow.save();
             return true;
-         }catch(Exception e){
-             e.printStackTrace();
-             return false;
-         }
-     }
-     
-     public boolean update(Departamento departamento){
-         try{
-            _repo.update(departamento);
-            _uow.save();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean update(Empleado e) {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            uow.empleados().update(e);
+            uow.save();
             return true;
-         }catch(Exception e){
-             e.printStackTrace();
-             return false;
-         }
-     }
-     
-     public boolean delete(Departamento departamento){
-         try{
-            _repo.delete(departamento.getIdDepartamento());
-            _uow.save();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean delete(Empleado e) {
+        return delete(e.getIdEmpleado());
+    }
+
+    @Override
+    public boolean delete(int id) {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            uow.empleados().delete(id);
+            uow.save();
             return true;
-         }catch(Exception e){
-             e.printStackTrace();
-             return false;
-         }
-     }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+    
+    public Empleado findByCedula(String cedula) {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            return uow.empleados().findByCedula(cedula);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }

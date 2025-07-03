@@ -5,65 +5,75 @@
 package service;
 
 import data.UnitOfWork;
-import data.repositories.GenericRepository;
-import java.sql.SQLException;
-import java.util.List;
-import model.BaseEntity;
 import model.Recomendacion;
 
 /**
  *
  * @author Joel Grullon
  */
-public class RecomendacionService {
-    
-     private UnitOfWork _uow;
-     private GenericRepository<Recomendacion> _repo;
+import java.sql.SQLException;
+import java.util.List;
 
-     
-     public RecomendacionService() throws SQLException{
-         _uow=new UnitOfWork();
-         _repo=_uow.getRepository(Recomendacion.class);
-     }
-     
-     public List<Recomendacion> getAll(){
-         return _repo.getAll();
-     }
-     
-     public Recomendacion findById(int id){
-         return _repo.findById(id);
-     }
-     
-     public boolean insert(Recomendacion recomendacion){
-         try{
-            boolean result= _repo.insert(recomendacion);
-            _uow.save();
-            return result;
-         }catch(Exception e){
-             e.printStackTrace();
-             return false;
-         }
-     }
-     
-     public boolean update(Recomendacion recomendacion){
-         try{
-            boolean result= _repo.update(recomendacion);
-            _uow.save();
-            return result;
-         }catch(Exception e){
-             e.printStackTrace();
-             return false;
-         }
-     }
-     
-     public boolean delete(Recomendacion recomendacion){
-         try{
-            boolean result= _repo.delete(recomendacion);
-            _uow.save();
-            return result;
-         }catch(Exception e){
-             e.printStackTrace();
-             return false;
-         }
-     }
+public class RecomendacionService implements IService<Recomendacion> {
+
+    @Override
+    public List<Recomendacion> getAll() {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            return uow.recomendaciones().findAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return List.of();
+        }
+    }
+
+    @Override
+    public Recomendacion findById(int id) {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            return uow.recomendaciones().findById(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public boolean insert(Recomendacion r) {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            uow.recomendaciones().save(r);
+            uow.save();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean update(Recomendacion r) {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            uow.recomendaciones().update(r);
+            uow.save();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean delete(Recomendacion r) {
+        return delete(r.getIdRecomendacion());
+    }
+
+    @Override
+    public boolean delete(int id) {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            uow.recomendaciones().delete(id);
+            uow.save();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

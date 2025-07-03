@@ -9,102 +9,89 @@ package data.repositories;
  * @author Joel Grullon
  */
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import model.Candidato;
-import model.Departamento;
-public class CandidatoRepository {
+import java.util.*;
+import model.Idioma;
+
+public class IdiomaRepository {
 
     private final Connection connection;
 
-    public CandidatoRepository(Connection connection) {
+    public IdiomaRepository(Connection connection) {
         this.connection = connection;
     }
 
-    public Candidato findById(int id) {
-        String sql = "SELECT * FROM candidatos WHERE id_candidato = ?";
+    public Idioma findById(int id) {
+        String sql = "SELECT * FROM idiomas WHERE id_idioma = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 return rs.next() ? mapRow(rs) : null;
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error buscando candidato", e);
+            throw new RuntimeException("Error buscando idioma", e);
         }
     }
 
-    public List<Candidato> findAll() {
-        List<Candidato> list = new ArrayList<>();
-        String sql = "SELECT * FROM candidatos";
+    public List<Idioma> findAll() {
+        List<Idioma> list = new ArrayList<>();
+        String sql = "SELECT * FROM idiomas";
         try (PreparedStatement stmt = connection.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 list.add(mapRow(rs));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error listando candidatos", e);
+            throw new RuntimeException("Error listando idiomas", e);
         }
         return list;
     }
-
-    public void save(Candidato c) {
-        String sql = "INSERT INTO candidatos(cedula, nombre, apellido, puesto_id, salario, eliminado) " +
-                     "VALUES (?, ?, ?, ?, ?, ?)";
+    
+    public void save(Idioma e) {
+        String sql = "INSERT INTO idiomas(nombre_idioma, eliminado) " +
+                     "VALUES (?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setString(1, c.getCedula());
-            stmt.setString(2, c.getNombre());
-            stmt.setString(3, c.getApellido());
-            stmt.setInt(4, c.getPuestoId());
-            stmt.setBigDecimal(5, c.getSalario());
-            stmt.setObject(6, c.getEliminado());
+            stmt.setString(1, e.getNombreIdioma());
+            stmt.setObject(2, e.getEliminado());
             stmt.executeUpdate();
 
             try (ResultSet rs = stmt.getGeneratedKeys()) {
                 if (rs.next()) {
-                    c.setIdCandidato(rs.getInt(1));
+                    e.setIdIdioma(rs.getInt(1));
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error insertando candidato", e);
+        } catch (SQLException ex) {
+            throw new RuntimeException("Error insertando idioma", ex);
         }
     }
 
-    public void update(Candidato c) {
-        String sql = "UPDATE candidatos SET cedula = ?, nombre = ?, apellido = ?, puesto_id = ?, salario = ?, eliminado = ? " +
-                     "WHERE id_candidato = ?";
+    public void update(Idioma e) {
+        String sql = "UPDATE idiomas SET nombre_idioma = ?, eliminado = ? " +
+                     "WHERE id_idioma = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, c.getCedula());
-            stmt.setString(2, c.getNombre());
-            stmt.setString(3, c.getApellido());
-            stmt.setInt(4, c.getPuestoId());
-            stmt.setBigDecimal(5, c.getSalario());
-            stmt.setObject(6, c.getEliminado());
-            stmt.setInt(7, c.getIdCandidato());
+            stmt.setString(1, e.getNombreIdioma());
+            stmt.setObject(2, e.getEliminado());
+            stmt.setInt(3, e.getIdIdioma());
             stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Error actualizando candidato", e);
+        } catch (SQLException ex) {
+            throw new RuntimeException("Error actualizando idioma", ex);
         }
     }
 
     public void delete(int id) {
-        String sql = "DELETE FROM candidatos WHERE id_candidato = ?";
+        String sql = "DELETE FROM idiomas WHERE id_idioma = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Error eliminando candidato", e);
+        } catch (SQLException ex) {
+            throw new RuntimeException("Error eliminando idioma", ex);
         }
     }
 
-    private Candidato mapRow(ResultSet rs) throws SQLException {
-        Candidato c = new Candidato();
-        c.setIdCandidato(rs.getInt("id_candidato"));
-        c.setCedula(rs.getString("cedula"));
-        c.setNombre(rs.getString("nombre"));
-        c.setApellido(rs.getString("apellido"));
-        c.setPuestoId(rs.getInt("puesto_id"));
-        c.setSalario(rs.getBigDecimal("salario"));
-        c.setEliminado(rs.getObject("eliminado") != null ? rs.getBoolean("eliminado") : null);
-        return c;
+    private Idioma mapRow(ResultSet rs) throws SQLException {
+        Idioma i = new Idioma();
+        i.setIdIdioma(rs.getInt("id_idioma"));
+        i.setNombreIdioma(rs.getString("nombre_idioma"));
+        i.setEliminado(rs.getObject("eliminado") != null ? rs.getBoolean("eliminado") : null);
+        return i;
     }
 }

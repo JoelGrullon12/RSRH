@@ -15,55 +15,69 @@ import model.Puesto;
  *
  * @author Joel Grullon
  */
-public class PuestoService {
-    
-     private UnitOfWork _uow;
-     private GenericRepository<Puesto> _repo;
+import java.sql.SQLException;
+import java.util.List;
 
-     
-     public PuestoService() throws SQLException{
-         _uow=new UnitOfWork();
-         _repo=_uow.getRepository(Puesto.class);
-     }
-     
-     public List<Puesto> getAll(){
-         return _repo.getAll();
-     }
-     
-     public Puesto findById(int id){
-         return _repo.findById(id);
-     }
-     
-     public boolean insert(Puesto puesto){
-         try{
-            boolean result= _repo.insert(puesto);
-            _uow.save();
-            return result;
-         }catch(Exception e){
-             e.printStackTrace();
-             return false;
-         }
-     }
-     
-     public boolean update(Puesto puesto){
-         try{
-            boolean result= _repo.update(puesto);
-            _uow.save();
-            return result;
-         }catch(Exception e){
-             e.printStackTrace();
-             return false;
-         }
-     }
-     
-     public boolean delete(Puesto puesto){
-         try{
-            boolean result= _repo.delete(puesto);
-            _uow.save();
-            return result;
-         }catch(Exception e){
-             e.printStackTrace();
-             return false;
-         }
-     }
+public class PuestoService implements IService<Puesto> {
+
+    @Override
+    public List<Puesto> getAll() {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            return uow.puestos().findAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return List.of();
+        }
+    }
+
+    @Override
+    public Puesto findById(int id) {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            return uow.puestos().findById(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public boolean insert(Puesto p) {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            uow.puestos().save(p);
+            uow.save();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean update(Puesto p) {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            uow.puestos().update(p);
+            uow.save();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean delete(Puesto p) {
+        return delete(p.getIdPuesto());
+    }
+
+    @Override
+    public boolean delete(int id) {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            uow.puestos().delete(id);
+            uow.save();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

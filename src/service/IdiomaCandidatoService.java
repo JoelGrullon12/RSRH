@@ -15,55 +15,69 @@ import model.IdiomaCandidato;
  *
  * @author Joel Grullon
  */
-public class IdiomaCandidatoService {
-    
-     private UnitOfWork _uow;
-     private GenericRepository<IdiomaCandidato> _repo;
+import java.sql.SQLException;
+import java.util.List;
 
-     
-     public IdiomaCandidatoService() throws SQLException{
-         _uow=new UnitOfWork();
-         _repo=_uow.getRepository(IdiomaCandidato.class);
-     }
-     
-     public List<IdiomaCandidato> getAll(){
-         return _repo.getAll();
-     }
-     
-     public IdiomaCandidato findById(int id){
-         return _repo.findById(id);
-     }
-     
-     public boolean insert(IdiomaCandidato idiomaCandidato){
-         try{
-            boolean result= _repo.insert(idiomaCandidato);
-            _uow.save();
-            return result;
-         }catch(Exception e){
-             e.printStackTrace();
-             return false;
-         }
-     }
-     
-     public boolean update(IdiomaCandidato idiomaCandidato){
-         try{
-            boolean result= _repo.update(idiomaCandidato);
-            _uow.save();
-            return result;
-         }catch(Exception e){
-             e.printStackTrace();
-             return false;
-         }
-     }
-     
-     public boolean delete(IdiomaCandidato idiomaCandidato){
-         try{
-            boolean result= _repo.delete(idiomaCandidato);
-            _uow.save();
-            return result;
-         }catch(Exception e){
-             e.printStackTrace();
-             return false;
-         }
-     }
+public class IdiomaCandidatoService implements IService<IdiomaCandidato> {
+
+    @Override
+    public List<IdiomaCandidato> getAll() {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            return uow.idiomasCandidatos().findAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return List.of();
+        }
+    }
+
+    @Override
+    public IdiomaCandidato findById(int id) {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            return uow.idiomasCandidatos().findById(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public boolean insert(IdiomaCandidato ic) {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            uow.idiomasCandidatos().save(ic);
+            uow.save();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean update(IdiomaCandidato ic) {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            uow.idiomasCandidatos().update(ic);
+            uow.save();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean delete(IdiomaCandidato ic) {
+        return delete(ic.getIdIdiomaCandidato());
+    }
+
+    @Override
+    public boolean delete(int id) {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            uow.idiomasCandidatos().delete(id);
+            uow.save();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

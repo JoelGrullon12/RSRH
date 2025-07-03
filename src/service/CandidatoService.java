@@ -16,55 +16,69 @@ import model.Idioma;
  *
  * @author Joel Grullon
  */
-public class CandidatoService {
-    
-     private UnitOfWork _uow;
-     private GenericRepository<Candidato> _repo;
+import java.sql.SQLException;
+import java.util.List;
 
-     
-     public CandidatoService() throws SQLException{
-         _uow=new UnitOfWork();
-         _repo=_uow.getRepository(Candidato.class);
-     }
-     
-     public List<Candidato> getAll(){
-         return _repo.getAll();
-     }
-     
-     public Candidato findById(int id){
-         return _repo.findById(id);
-     }
-     
-     public boolean insert(Candidato candidato){
-         try{
-            boolean result= _repo.insert(candidato);
-            _uow.save();
-            return result;
-         }catch(Exception e){
-             e.printStackTrace();
-             return false;
-         }
-     }
-     
-     public boolean update(Candidato candidato){
-         try{
-            boolean result= _repo.update(candidato);
-            _uow.save();
-            return result;
-         }catch(Exception e){
-             e.printStackTrace();
-             return false;
-         }
-     }
-     
-     public boolean delete(Candidato candidato){
-         try{
-            boolean result= _repo.delete(candidato);
-            _uow.save();
-            return result;
-         }catch(Exception e){
-             e.printStackTrace();
-             return false;
-         }
-     }
+public class CandidatoService implements IService<Candidato> {
+
+    @Override
+    public List<Candidato> getAll() {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            return uow.candidatos().findAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return List.of();
+        }
+    }
+
+    @Override
+    public Candidato findById(int id) {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            return uow.candidatos().findById(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public boolean insert(Candidato c) {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            uow.candidatos().save(c);
+            uow.save();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean update(Candidato c) {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            uow.candidatos().update(c);
+            uow.save();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean delete(Candidato c) {
+        return delete(c.getIdCandidato());
+    }
+
+    @Override
+    public boolean delete(int id) {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            uow.candidatos().delete(id);
+            uow.save();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

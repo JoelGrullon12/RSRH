@@ -8,7 +8,9 @@ public class Usuario {
     private int idUsuario;
     private String nombreUsuario;
     private String contrasenia;
+    private String tipoUsuario;
     private int empleadoId;
+    private int candidatoId;
     private Boolean eliminado;
 
     private Empleado empleado;
@@ -36,6 +38,14 @@ public class Usuario {
     public void setContrasenia(String contrasenia) {
         this.contrasenia = contrasenia;
     }
+    
+    public String getTipoUsuario() {
+        return tipoUsuario;
+    }
+
+    public void setTipoUsuario(String tipoUsuario) {
+        this.tipoUsuario = tipoUsuario;
+    }
 
     public int getEmpleadoId() {
         return empleadoId;
@@ -44,9 +54,17 @@ public class Usuario {
     public void setEmpleadoId(int empleadoId) {
         this.empleadoId = empleadoId;
     }
+    
+    public int getCandidatoId() {
+        return candidatoId;
+    }
+
+    public void setCandidatoId(int candidatoId) {
+        this.candidatoId = candidatoId;
+    }
 
     public Boolean getEliminado() {
-        return eliminado;
+        return eliminado==null?false:eliminado;
     }
 
     public void setEliminado(Boolean eliminado) {

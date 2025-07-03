@@ -48,15 +48,16 @@ public class CandidatoRepository {
     }
 
     public void save(Candidato c) {
-        String sql = "INSERT INTO candidatos(cedula, nombre, apellido, puesto_id, salario, eliminado) " +
-                     "VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO candidatos(cedula, nombre, apellido, email, puesto_id, salario, eliminado) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, c.getCedula());
             stmt.setString(2, c.getNombre());
             stmt.setString(3, c.getApellido());
-            stmt.setInt(4, c.getPuestoId());
-            stmt.setBigDecimal(5, c.getSalario());
-            stmt.setObject(6, c.getEliminado());
+            stmt.setString(4, c.getEmail());
+            stmt.setInt(5, c.getPuestoId());
+            stmt.setBigDecimal(6, c.getSalario());
+            stmt.setObject(7, c.getEliminado());
             stmt.executeUpdate();
 
             try (ResultSet rs = stmt.getGeneratedKeys()) {
@@ -70,16 +71,17 @@ public class CandidatoRepository {
     }
 
     public void update(Candidato c) {
-        String sql = "UPDATE candidatos SET cedula = ?, nombre = ?, apellido = ?, puesto_id = ?, salario = ?, eliminado = ? " +
+        String sql = "UPDATE candidatos SET cedula = ?, nombre = ?, apellido = ?, email = ?, puesto_id = ?, salario = ?, eliminado = ? " +
                      "WHERE id_candidato = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, c.getCedula());
             stmt.setString(2, c.getNombre());
             stmt.setString(3, c.getApellido());
-            stmt.setInt(4, c.getPuestoId());
-            stmt.setBigDecimal(5, c.getSalario());
-            stmt.setObject(6, c.getEliminado());
-            stmt.setInt(7, c.getIdCandidato());
+            stmt.setString(4, c.getEmail());
+            stmt.setInt(5, c.getPuestoId());
+            stmt.setBigDecimal(6, c.getSalario());
+            stmt.setObject(7, c.getEliminado());
+            stmt.setInt(8, c.getIdCandidato());
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Error actualizando candidato", e);
@@ -102,6 +104,7 @@ public class CandidatoRepository {
         c.setCedula(rs.getString("cedula"));
         c.setNombre(rs.getString("nombre"));
         c.setApellido(rs.getString("apellido"));
+        c.setEmail(rs.getString("email"));
         c.setPuestoId(rs.getInt("puesto_id"));
         c.setSalario(rs.getBigDecimal("salario"));
         c.setEliminado(rs.getObject("eliminado") != null ? rs.getBoolean("eliminado") : null);

@@ -35,6 +35,18 @@ public class EmpleadoRepository {
             throw new RuntimeException("Error buscando empleado", e);
         }
     }
+    
+    public Empleado findByCedula(String cedula) {
+        String sql = "SELECT * FROM empleados WHERE cedula = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, cedula);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next() ? mapRow(rs) : null;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error buscando empleado por cedula", e);
+        }
+    }
 
     public List<Empleado> findAll() {
         List<Empleado> list = new ArrayList<>();

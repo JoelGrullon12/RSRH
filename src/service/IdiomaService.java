@@ -16,55 +16,68 @@ import model.Idioma;
  *
  * @author Joel Grullon
  */
-public class IdiomaService {
-    
-     private UnitOfWork _uow;
-     private GenericRepository<Idioma> _repo;
+import java.util.List;
 
-     
-     public IdiomaService() throws SQLException{
-         _uow=new UnitOfWork();
-         _repo=_uow.getRepository(Idioma.class);
-     }
-     
-     public List<Idioma> getAll(){
-         return _repo.getAll();
-     }
-     
-     public Idioma findById(int id){
-         return _repo.findById(id);
-     }
-     
-     public boolean insert(Idioma idioma){
-         try{
-            boolean result= _repo.insert(idioma);
-            _uow.save();
-            return result;
-         }catch(Exception e){
-             e.printStackTrace();
-             return false;
-         }
-     }
-     
-     public boolean update(Idioma idioma){
-         try{
-            boolean result= _repo.update(idioma);
-            _uow.save();
-            return result;
-         }catch(Exception e){
-             e.printStackTrace();
-             return false;
-         }
-     }
-     
-     public boolean delete(Idioma idioma){
-         try{
-            boolean result= _repo.delete(idioma);
-            _uow.save();
-            return result;
-         }catch(Exception e){
-             e.printStackTrace();
-             return false;
-         }
-     }
+public class IdiomaService implements IService<Idioma> {
+
+     @Override
+    public List<Idioma> getAll() {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            return uow.idiomas().findAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return List.of();
+        }
+    }
+
+    @Override
+    public Idioma findById(int id) {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            return uow.idiomas().findById(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    @Override
+    public boolean insert(Idioma ic) {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            uow.idiomas().save(ic);
+            uow.save();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean update(Idioma ic) {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            uow.idiomas().update(ic);
+            uow.save();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean delete(Idioma ic) {
+        return delete(ic.getIdIdioma());
+    }
+
+    @Override
+    public boolean delete(int id) {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            uow.idiomas().delete(id);
+            uow.save();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

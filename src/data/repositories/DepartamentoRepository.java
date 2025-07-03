@@ -36,6 +36,21 @@ public class DepartamentoRepository{
         return null;
     }
     
+    public Departamento findByNombre(String nombre) {
+        String sql = "SELECT * FROM departamentos WHERE nombre_departamento = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, nombre);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return mapRow(rs);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al buscar el departamento", e);
+        }
+        return null;
+    }
+    
     public List<Departamento> findAll() {
         List<Departamento> list = new ArrayList<>();
         String sql = "SELECT * FROM departamentos";

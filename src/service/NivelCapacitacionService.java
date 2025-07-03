@@ -15,55 +15,28 @@ import model.NivelCapacitacion;
  *
  * @author Joel Grullon
  */
-public class NivelCapacitacionService {
-    
-     private UnitOfWork _uow;
-     private GenericRepository<NivelCapacitacion> _repo;
+import java.sql.SQLException;
+import java.util.List;
 
-     
-     public NivelCapacitacionService() throws SQLException{
-         _uow=new UnitOfWork();
-         _repo=_uow.getRepository(NivelCapacitacion.class);
-     }
-     
-     public List<NivelCapacitacion> getAll(){
-         return _repo.getAll();
-     }
-     
-     public NivelCapacitacion findById(int id){
-         return _repo.findById(id);
-     }
-     
-     public boolean insert(NivelCapacitacion nivelCapacitacion){
-         try{
-            boolean result= _repo.insert(nivelCapacitacion);
-            _uow.save();
-            return result;
-         }catch(Exception e){
-             e.printStackTrace();
-             return false;
-         }
-     }
-     
-     public boolean update(NivelCapacitacion nivelCapacitacion){
-         try{
-            boolean result= _repo.update(nivelCapacitacion);
-            _uow.save();
-            return result;
-         }catch(Exception e){
-             e.printStackTrace();
-             return false;
-         }
-     }
-     
-     public boolean delete(NivelCapacitacion nivelCapacitacion){
-         try{
-            boolean result= _repo.delete(nivelCapacitacion);
-            _uow.save();
-            return result;
-         }catch(Exception e){
-             e.printStackTrace();
-             return false;
-         }
-     }
+public class NivelCapacitacionService implements IReadOnlyService<NivelCapacitacion> {
+
+    @Override
+    public List<NivelCapacitacion> getAll() {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            return uow.nivelesCapacitacion().findAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return List.of();
+        }
+    }
+
+    @Override
+    public NivelCapacitacion findById(int id) {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            return uow.nivelesCapacitacion().findById(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

@@ -14,6 +14,8 @@ public class MainPage extends javax.swing.JFrame {
      * Creates new form MainPage
      */
     public MainPage() {
+//        LoginForm login=new LoginForm(this, true);
+//        login.setVisible(true);
         initComponents();
     }
 

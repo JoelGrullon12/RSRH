@@ -4,15 +4,15 @@
  */
 package model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Capacitacion {
     private int idCapacitacion;
     private String nombreCapacitacion;
     private String descripcion;
     private int nivelId;
-    private Date fechaDesde;
-    private Date fechaHasta;
+    private LocalDate fechaDesde;
+    private LocalDate fechaHasta;
     private String institucion;
     private int candidatoId;
     private Boolean eliminado;
@@ -52,19 +52,19 @@ public class Capacitacion {
         this.nivelId = nivelId;
     }
 
-    public Date getFechaDesde() {
+    public LocalDate getFechaDesde() {
         return fechaDesde;
     }
 
-    public void setFechaDesde(Date fechaDesde) {
+    public void setFechaDesde(LocalDate fechaDesde) {
         this.fechaDesde = fechaDesde;
     }
 
-    public Date getFechaHasta() {
+    public LocalDate getFechaHasta() {
         return fechaHasta;
     }
 
-    public void setFechaHasta(Date fechaHasta) {
+    public void setFechaHasta(LocalDate fechaHasta) {
         this.fechaHasta = fechaHasta;
     }
 

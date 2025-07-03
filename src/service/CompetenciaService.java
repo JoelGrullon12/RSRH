@@ -16,55 +16,69 @@ import model.Idioma;
  *
  * @author Joel Grullon
  */
-public class CompetenciaService {
-    
-     private UnitOfWork _uow;
-     private GenericRepository<Competencia> _repo;
+import java.sql.SQLException;
+import java.util.List;
 
-     
-     public CompetenciaService() throws SQLException{
-         _uow=new UnitOfWork();
-         _repo=_uow.getRepository(Competencia.class);
-     }
-     
-     public List<Competencia> getAll(){
-         return _repo.getAll();
-     }
-     
-     public Competencia findById(int id){
-         return _repo.findById(id);
-     }
-     
-     public boolean insert(Competencia Competencia){
-         try{
-            boolean result= _repo.insert(Competencia);
-            _uow.save();
-            return result;
-         }catch(Exception e){
-             e.printStackTrace();
-             return false;
-         }
-     }
-     
-     public boolean update(Competencia Competencia){
-         try{
-            boolean result= _repo.update(Competencia);
-            _uow.save();
-            return result;
-         }catch(Exception e){
-             e.printStackTrace();
-             return false;
-         }
-     }
-     
-     public boolean delete(Competencia Competencia){
-         try{
-            boolean result= _repo.delete(Competencia);
-            _uow.save();
-            return result;
-         }catch(Exception e){
-             e.printStackTrace();
-             return false;
-         }
-     }
+public class CompetenciaService implements IService<Competencia> {
+
+    @Override
+    public List<Competencia> getAll() {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            return uow.competencias().findAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return List.of();
+        }
+    }
+
+    @Override
+    public Competencia findById(int id) {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            return uow.competencias().findById(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public boolean insert(Competencia c) {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            uow.competencias().save(c);
+            uow.save();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean update(Competencia c) {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            uow.competencias().update(c);
+            uow.save();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean delete(Competencia c) {
+        return delete(c.getIdCompetencia());
+    }
+
+    @Override
+    public boolean delete(int id) {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            uow.competencias().delete(id);
+            uow.save();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

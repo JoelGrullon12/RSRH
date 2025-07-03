@@ -4,14 +4,15 @@
  */
 package model;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class Puesto {
     private int idPuesto;
     private String nombrePuesto;
     private String descripcion;
-    private Double salarioMinimo;
-    private Double salarioMaximo;
+    private BigDecimal salarioMinimo;
+    private BigDecimal salarioMaximo;
     private int riesgoId;
     private int departamentoId;
     private int vacantes;
@@ -45,19 +46,19 @@ public class Puesto {
         this.descripcion = descripcion;
     }
 
-    public Double getSalarioMinimo() {
+    public BigDecimal getSalarioMinimo() {
         return salarioMinimo;
     }
 
-    public void setSalarioMinimo(Double salarioMinimo) {
+    public void setSalarioMinimo(BigDecimal salarioMinimo) {
         this.salarioMinimo = salarioMinimo;
     }
 
-    public Double getSalarioMaximo() {
+    public BigDecimal getSalarioMaximo() {
         return salarioMaximo;
     }
 
-    public void setSalarioMaximo(Double salarioMaximo) {
+    public void setSalarioMaximo(BigDecimal salarioMaximo) {
         this.salarioMaximo = salarioMaximo;
     }
 

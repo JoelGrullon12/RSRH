@@ -12,6 +12,7 @@ public class Candidato {
     private String cedula;
     private String nombre;
     private String apellido;
+    private String email;
     private int puestoId;
     private BigDecimal salario;
     private Boolean eliminado;
@@ -52,6 +53,14 @@ public class Candidato {
 
     public void setApellido(String apellido) {
         this.apellido = apellido;
+    }
+    
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public int getPuestoId() {
