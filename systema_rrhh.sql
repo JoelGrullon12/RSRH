@@ -52,6 +52,23 @@ alter table candidatos
 add constraint fk_puesto_candidato
 foreign key (puesto_id) references puestos(id_puesto);
 
+create table experiencias_laborales( 
+    id_experiencia int not null primary key auto_increment,
+    empresa varchar(100) not null,
+    puesto varchar(50) not null,
+    descripcion text null,
+    fecha_desde date not null,
+    fecha_hasta date not null,
+    salario numeric(10,2) not null,
+    candidato_id int not null,
+    eliminado bit null
+);
+
+alter table experiencias_laborales
+add constraint fk_experiencia_candidato
+foreign key (candidato_id) references candidatos(id_candidato);
+
+
 create table recomendaciones( -- personas que recomiendan a los candidatos
     id_recomendacion int not null primary key auto_increment,
     nombre_recomendador varchar(50) not null,

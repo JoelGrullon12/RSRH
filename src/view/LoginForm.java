@@ -6,7 +6,11 @@ package view;
 
 import common.SeedBD;
 import common.Session;
+
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
 import model.Usuario;
 import service.UsuarioService;
 
@@ -55,6 +59,12 @@ public class LoginForm extends javax.swing.JDialog {
         jLabel1.setText("Iniciar Sesion");
 
         jLabel3.setText("Usuario");
+
+        txtContrasenia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIngresarActionPerformed(evt);
+            }
+        });
 
         btnIngresar.setActionCommand("");
         btnIngresar.setLabel("Ingresar");
@@ -144,13 +154,18 @@ public class LoginForm extends javax.swing.JDialog {
             // Guardar la sesión
             Session.login(usuario);
 
-            // Abrir el MDI principal
-            MainPage mdi = new MainPage();
-            mdi.setLocationRelativeTo(null);
-            mdi.setVisible(true);
-
-            // Cerrar el login
             this.dispose();
+
+            // Luego abrir el MainPage de forma asincrónica
+            SwingUtilities.invokeLater(() -> {
+                MainPage mdi = new MainPage();
+                mdi.setVisible(true);
+                mdi.setExtendedState(JFrame.MAXIMIZED_BOTH); // Opcional: maximizar
+                mdi.toFront();                                // Asegurar que esté al frente
+                mdi.requestFocus();
+                mdi.setAlwaysOnTop(true);                     // Forzar al frente temporalmente
+                mdi.setAlwaysOnTop(false);
+            });
         } else {
             JOptionPane.showMessageDialog(this, "Credenciales inválidas", "Acceso denegado", JOptionPane.ERROR_MESSAGE);
         }

@@ -13,6 +13,7 @@ import data.repositories.CapacitacionRepository;
 import data.repositories.CompetenciaRepository;
 import data.repositories.DepartamentoRepository;
 import data.repositories.EmpleadoRepository;
+import data.repositories.ExperienciaLaboralRepository;
 import data.repositories.IdiomaCandidatoRepository;
 import data.repositories.IdiomaRepository;
 import data.repositories.NivelIdiomaRepository;
@@ -33,6 +34,7 @@ public class UnitOfWork implements AutoCloseable {
     private PuestoRepository puestoRepository;
     private RiesgoPuestoRepository riesgoPuestoRepository;
     private CandidatoRepository candidatoRepository;
+    private ExperienciaLaboralRepository experienciaRepository;
     private RecomendacionRepository recomendacionRepository;
     private CompetenciaRepository competenciaRepository;
     private IdiomaRepository idiomaRepository;
@@ -82,6 +84,12 @@ public class UnitOfWork implements AutoCloseable {
         if (competenciaRepository == null)
             competenciaRepository = new CompetenciaRepository(connection);
         return competenciaRepository;
+    }
+
+    public ExperienciaLaboralRepository experienciasLaborales() {
+        if (experienciaRepository == null)
+            experienciaRepository = new ExperienciaLaboralRepository(connection);
+        return experienciaRepository;
     }
 
     public IdiomaRepository idiomas() {

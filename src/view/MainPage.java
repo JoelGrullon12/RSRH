@@ -4,6 +4,8 @@
  */
 package view;
 
+import view.nuevoCandidato.NuevoCandidatoForm;
+
 /**
  *
  * @author JoelGrullon
@@ -143,7 +145,7 @@ public class MainPage extends javax.swing.JFrame {
 
     private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMenuItemActionPerformed
         // TODO add your handling code here:
-        NuevoCandidatoForm nuevoCandidato=new NuevoCandidatoForm();
+        NuevoCandidatoForm nuevoCandidato=new NuevoCandidatoForm(mainDesktop);
         mainDesktop.add(nuevoCandidato);
         nuevoCandidato.setVisible(true);
     }//GEN-LAST:event_openMenuItemActionPerformed
