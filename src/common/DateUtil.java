@@ -5,7 +5,7 @@ import java.time.Period;
 
 public class DateUtil {
 
-        public static String calcularPeriodo(LocalDate fechaInicio, LocalDate fechaFin) {
+    public static String calcularPeriodo(LocalDate fechaInicio, LocalDate fechaFin) {
         if (fechaInicio == null || fechaFin == null) {
             return "Fechas inválidas";
         }

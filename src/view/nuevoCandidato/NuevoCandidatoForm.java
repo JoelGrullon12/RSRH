@@ -17,11 +17,15 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+
 import model.Capacitacion;
 import model.Competencia;
 
 import model.ExperienciaLaboral;
 import model.Idioma;
+import model.IdiomaCandidato;
+import model.NivelIdioma;
 import model.Puesto;
 import model.Recomendacion;
 import org.jdatepicker.impl.JDatePanelImpl;
@@ -33,6 +37,7 @@ import service.CompetenciaService;
 import service.ExperienciaLaboralService;
 import service.IdiomaCandidatoService;
 import service.IdiomaService;
+import service.NivelIdiomaService;
 import service.PuestoService;
 import service.RecomendacionService;
 
@@ -49,6 +54,7 @@ public class NuevoCandidatoForm extends javax.swing.JInternalFrame {
     private CompetenciaService competenciaService;
     private IdiomaService idiomaService;
     private IdiomaCandidatoService idiomaCandidatoService;
+    private NivelIdiomaService nivelIdiomaService;
     private RecomendacionService recomendacionService;
 
     private JDesktopPane mainDesktop;
@@ -58,6 +64,7 @@ public class NuevoCandidatoForm extends javax.swing.JInternalFrame {
     private List<Recomendacion> recomendaciones;
     private List<Capacitacion> capacitaciones;
     private List<Idioma> idiomas;
+    private List<IdiomaCandidato> idiomaCandidatos;
 
     /**
      * Creates new form NuevoCandidatoForm
@@ -71,12 +78,14 @@ public class NuevoCandidatoForm extends javax.swing.JInternalFrame {
         competenciaService = new CompetenciaService();
         idiomaService = new IdiomaService();
         idiomaCandidatoService = new IdiomaCandidatoService();
+        nivelIdiomaService = new NivelIdiomaService();
         recomendacionService = new RecomendacionService();
 
         experienciasLaborales = new ArrayList<>();
         competencias = new ArrayList<>();
         recomendaciones = new ArrayList<>();
         capacitaciones = new ArrayList<>();
+        idiomaCandidatos = new ArrayList<>();
         idiomas = new ArrayList<>();
 
         mainDesktop = desktopPanel;
@@ -90,26 +99,17 @@ public class NuevoCandidatoForm extends javax.swing.JInternalFrame {
     }
 
     public void recargarExperiencias(){
-        Object[][] modelExp = new Object[experienciasLaborales.size()][3];
+        DefaultTableModel modelo = (DefaultTableModel) tblExp.getModel();
+        modelo.setRowCount(0);
 
-        for (int i = 0; i < modelExp.length; i++) {
-            modelExp[i][0] = experienciasLaborales.get(i).getEmpresa();
-            modelExp[i][1] = experienciasLaborales.get(i).getPuesto();
-
-            LocalDate desde = experienciasLaborales.get(i).getFechaDesde();
-            LocalDate hasta = experienciasLaborales.get(i).getFechaHasta();
+        for (ExperienciaLaboral exp:experienciasLaborales) {
+            LocalDate desde = exp.getFechaDesde();
+            LocalDate hasta = exp.getFechaHasta();
 
             String tiempo = DateUtil.calcularPeriodo(desde, hasta);
 
-            modelExp[i][2] = tiempo;
+            modelo.addRow(new Object[]{exp.getEmpresa(), exp.getPuesto(), tiempo});
         }
-
-        tblExp.setModel(new javax.swing.table.DefaultTableModel(
-                modelExp,
-                new String[]{
-                    "Nombre Empresa", "Puesto Ejercido", "Tiempo"
-                }
-        ));
     }
 
     public void agregarCompetencia(Competencia comp) {
@@ -118,19 +118,54 @@ public class NuevoCandidatoForm extends javax.swing.JInternalFrame {
     }
 
     public void recargarCompetencias(){
-        Object[][] modelComp = new Object[competencias.size()][2];
+        DefaultTableModel modelo = (DefaultTableModel) tblCompetencias.getModel();
+        modelo.setRowCount(0);
 
-        for (int i = 0; i < modelComp.length; i++) {
-            modelComp[i][0] = competencias.get(i).getNombreCompetencia();
-            modelComp[i][1] = competencias.get(i).getDescripcion();
+        for (Competencia comp:competencias) {
+            modelo.addRow(new Object[]{comp.getNombreCompetencia(), comp.getDescripcion()});
         }
+    }
 
-        tblExp.setModel(new javax.swing.table.DefaultTableModel(
-                modelComp,
-                new String[]{
-                    "Competencia", "Descripcion"
-                }
-        ));
+    public void agregarRecomendacion(Recomendacion rec) {
+        recomendaciones.add(rec);
+        recargarRecomendaciones();       
+    }
+
+    public void recargarRecomendaciones(){
+        DefaultTableModel modelo = (DefaultTableModel) tblRecomendacion.getModel();
+        modelo.setRowCount(0);
+
+        for (Recomendacion reco:recomendaciones) {
+            modelo.addRow(new Object[]{reco.getNombreRecomendador(), reco.getContacto()});
+        }
+    }
+
+    public void agregarCapacitacion(Capacitacion cap) {
+        capacitaciones.add(cap);
+        recargarCapacitaciones();       
+    }
+
+    public void recargarCapacitaciones(){
+        DefaultTableModel modelo = (DefaultTableModel) tblCapacitaciones.getModel();
+        modelo.setRowCount(0);
+
+        for (Capacitacion cap:capacitaciones) {
+            modelo.addRow(new Object[]{cap.getNombreCapacitacion(), cap.getInstitucion()});
+        }
+    }
+
+    public void agregarIdioma(IdiomaCandidato idioma) {
+        idiomaCandidatos.add(idioma);
+        recargarIdiomas();       
+    }
+
+    public void recargarIdiomas(){
+        DefaultTableModel modelo = (DefaultTableModel) tblIdiomas.getModel();
+        modelo.setRowCount(0);
+
+        for (IdiomaCandidato idiomaCandidato:idiomaCandidatos) {
+            modelo.addRow(new Object[]{idiomaCandidato.getIdioma().getNombreIdioma(), idiomaCandidato.getNivelIdioma().getNombreNivel()});
+        }
     }
 
     /**
@@ -153,7 +188,7 @@ public class NuevoCandidatoForm extends javax.swing.JInternalFrame {
         btnEliminarExp = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tblCap = new javax.swing.JTable();
+        tblCapacitaciones = new javax.swing.JTable();
         btnAgregarCap = new javax.swing.JButton();
         btnEditarCap = new javax.swing.JButton();
         btnEliminarCap = new javax.swing.JButton();
@@ -189,7 +224,7 @@ public class NuevoCandidatoForm extends javax.swing.JInternalFrame {
         txtSalario = new javax.swing.JFormattedTextField();
         txtEmail = new javax.swing.JFormattedTextField();
         jLabel7 = new javax.swing.JLabel();
-        btnAgregarExp3 = new javax.swing.JButton();
+        btnEnviarSolicitud = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JSeparator();
         jSeparator1 = new javax.swing.JSeparator();
 
@@ -260,7 +295,7 @@ public class NuevoCandidatoForm extends javax.swing.JInternalFrame {
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Capacitaciones"));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        tblCap.setModel(new javax.swing.table.DefaultTableModel(
+        tblCapacitaciones.setModel(new javax.swing.table.DefaultTableModel(
                 new Object[][]{},
                 new String[]{
                     "Carrera", "Institucion"
@@ -275,12 +310,12 @@ public class NuevoCandidatoForm extends javax.swing.JInternalFrame {
             }
         });
 
-        tblCap.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+        tblCapacitaciones.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 // Evitar procesar cuando aún se están ajustando los valores
                 if (!e.getValueIsAdjusting()) {
-                    int selectedRow = tblCap.getSelectedRow();
+                    int selectedRow = tblCapacitaciones.getSelectedRow();
                     boolean buttonsEnabled = selectedRow != -1;
                     btnEditarCap.setEnabled(buttonsEnabled);
                     btnEliminarCap.setEnabled(buttonsEnabled);
@@ -288,7 +323,7 @@ public class NuevoCandidatoForm extends javax.swing.JInternalFrame {
             }
         });
 
-        jScrollPane2.setViewportView(tblCap);
+        jScrollPane2.setViewportView(tblCapacitaciones);
 
         jPanel3.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(11, 57, 328, 184));
 
@@ -504,8 +539,10 @@ public class NuevoCandidatoForm extends javax.swing.JInternalFrame {
 
         jPanel6.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 700, 210));
 
-        btnAgregarExp3.setText("Enviar Solicitud");
-        jPanel6.add(btnAgregarExp3, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 970, -1, -1));
+        btnEnviarSolicitud.setText("Enviar Solicitud");
+        btnEnviarSolicitud.addActionListener(this::btnEnviarSolicitudClick);
+
+        jPanel6.add(btnEnviarSolicitud, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 970, -1, -1));
         jPanel6.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 1000, 70, 20));
 
         jScrollPane5.setViewportView(jPanel6);
@@ -541,103 +578,115 @@ public class NuevoCandidatoForm extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnAgregarExpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarExpActionPerformed
+    private void btnAgregarExpActionPerformed(java.awt.event.ActionEvent evt) {
         AgregarExperienciaForm agExp = new AgregarExperienciaForm(this);
         mainDesktop.add(agExp);
         agExp.setVisible(true);
-    }//GEN-LAST:event_btnAgregarExpActionPerformed
+    }
 
-    private void btnEditarExpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarExpActionPerformed
+    private void btnEditarExpActionPerformed(java.awt.event.ActionEvent evt) {
         int expSeleccionada=tblExp.getSelectedRow();
 
         AgregarExperienciaForm agExp = new AgregarExperienciaForm(this, experienciasLaborales.get(expSeleccionada));
         mainDesktop.add(agExp);
         agExp.setVisible(true);
-    }//GEN-LAST:event_btnEditarExpActionPerformed
+    }
 
-    private void btnEliminarExpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarExpActionPerformed
+    private void btnEliminarExpActionPerformed(java.awt.event.ActionEvent evt) {
         int filaSeleccionada=tblExp.getSelectedRow();
         experienciasLaborales.remove(filaSeleccionada);
-        tblExp.remove(filaSeleccionada);
-    }//GEN-LAST:event_btnEditarExpActionPerformed
+        recargarExperiencias();
+    }
 
-    private void btnAgregarCompClick(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarExpActionPerformed
+    private void btnAgregarCompClick(java.awt.event.ActionEvent evt) {
         AgregarCompetenciaForm agCompetencia=new AgregarCompetenciaForm(this);
         mainDesktop.add(agCompetencia);
         agCompetencia.setVisible(true);
-    }//GEN-LAST:event_btnAgregarExpActionPerformed
+    }
 
-    private void btnEditarCompClick(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarExpActionPerformed
+    private void btnEditarCompClick(java.awt.event.ActionEvent evt) {
         int filaSeleccionada=tblCompetencias.getSelectedRow();
 
         AgregarCompetenciaForm agComp = new AgregarCompetenciaForm(this, competencias.get(filaSeleccionada));
         mainDesktop.add(agComp);
         agComp.setVisible(true);
-    }//GEN-LAST:event_btnAgregarExpActionPerformed
+    }
 
-    private void btnEliminarCompClick(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarExpActionPerformed
+    private void btnEliminarCompClick(java.awt.event.ActionEvent evt) { 
         int filaSeleccionada=tblCompetencias.getSelectedRow();
         competencias.remove(filaSeleccionada);
-        tblExp.remove(filaSeleccionada);
+        recargarCompetencias();
+    }
 
-    }//GEN-LAST:event_btnAgregarExpActionPerformed
-
-    private void btnAgregarRecomendacionClick(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarExpActionPerformed
+    private void btnAgregarRecomendacionClick(java.awt.event.ActionEvent evt) {
         AgregarRecomendacionForm agRecomendacion=new AgregarRecomendacionForm(this);
         mainDesktop.add(agRecomendacion);
         agRecomendacion.setVisible(true);
-    }//GEN-LAST:event_btnAgregarExpActionPerformed
+    }
 
-    private void btnEditarRecomendacionClick(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarExpActionPerformed
-        // TODO add your handling code here:
+    private void btnEditarRecomendacionClick(java.awt.event.ActionEvent evt) {
+        int filaSeleccionada=tblRecomendacion.getSelectedRow();
 
-    }//GEN-LAST:event_btnAgregarExpActionPerformed
+        AgregarRecomendacionForm form = new AgregarRecomendacionForm(this, recomendaciones.get(filaSeleccionada));
+        mainDesktop.add(form);
+        form.setVisible(true);
+    }
 
-    private void btnEliminarRecomendacionClick(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarExpActionPerformed
+    private void btnEliminarRecomendacionClick(java.awt.event.ActionEvent evt) {
         int filaSeleccionada=tblRecomendacion.getSelectedRow();
         recomendaciones.remove(filaSeleccionada);
-        tblRecomendacion.remove(filaSeleccionada);
-    }//GEN-LAST:event_btnAgregarExpActionPerformed
+        recargarRecomendaciones();
+    }
 
-    private void btnAgregarCapacitacionClick(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarExpActionPerformed
+    private void btnAgregarCapacitacionClick(java.awt.event.ActionEvent evt) {
         AgregarCapacitacionForm agCapacitacion=new AgregarCapacitacionForm(this);
         mainDesktop.add(agCapacitacion);
         agCapacitacion.setVisible(true);
-    }//GEN-LAST:event_btnAgregarExpActionPerformed
+    }
 
-    private void btnEditarCapacitacionClick(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarExpActionPerformed
-        // TODO add your handling code here:
+    private void btnEditarCapacitacionClick(java.awt.event.ActionEvent evt) {
+        int filaSeleccionada=tblCapacitaciones.getSelectedRow();
 
-    }//GEN-LAST:event_btnAgregarExpActionPerformed
+        AgregarCapacitacionForm form = new AgregarCapacitacionForm(this, capacitaciones.get(filaSeleccionada));
+        mainDesktop.add(form);
+        form.setVisible(true);
+    }
 
-    private void btnEliminarCapacitacionClick(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarExpActionPerformed
-        int filaSeleccionada=tblCap.getSelectedRow();
+    private void btnEliminarCapacitacionClick(java.awt.event.ActionEvent evt) {
+        int filaSeleccionada=tblCapacitaciones.getSelectedRow();
         capacitaciones.remove(filaSeleccionada);
-        tblCap.remove(filaSeleccionada);
-    }//GEN-LAST:event_btnAgregarExpActionPerformed
+        recargarCapacitaciones();
+    }
 
-    private void btnAgregarIdiomaClick(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarExpActionPerformed
-        // AgregarIdiomaForm agCapacitacion=new AgregarIdiomaForm(this);
-        // mainDesktop.add(agCapacitacion);
-        // agCapacitacion.setVisible(true);
-    }//GEN-LAST:event_btnAgregarExpActionPerformed
+    private void btnAgregarIdiomaClick(java.awt.event.ActionEvent evt) {
+        AgregarIdiomaCandidatoForm form=new AgregarIdiomaCandidatoForm(this);
+        mainDesktop.add(form);
+        form.setVisible(true);
+    }
 
-    private void btnEditarIdiomaClick(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarExpActionPerformed
-        // TODO add your handling code here:
-
-    }//GEN-LAST:event_btnAgregarExpActionPerformed
-
-    private void btnEliminarIdiomaClick(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarExpActionPerformed
+    private void btnEditarIdiomaClick(java.awt.event.ActionEvent evt) {
         int filaSeleccionada=tblIdiomas.getSelectedRow();
-        capacitaciones.remove(filaSeleccionada);
-        tblCap.remove(filaSeleccionada);
-    }//GEN-LAST:event_btnAgregarExpActionPerformed
+
+        AgregarIdiomaCandidatoForm form = new AgregarIdiomaCandidatoForm(this, idiomaCandidatos.get(filaSeleccionada));
+        mainDesktop.add(form);
+        form.setVisible(true);
+    }
+
+    private void btnEliminarIdiomaClick(java.awt.event.ActionEvent evt) {
+        int filaSeleccionada=tblIdiomas.getSelectedRow();
+        idiomaCandidatos.remove(filaSeleccionada);
+        recargarIdiomas();
+    }
+
+    private void btnEnviarSolicitudClick(java.awt.event.ActionEvent evt){
+
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarCap;
     private javax.swing.JButton btnAgregarComp;
     private javax.swing.JButton btnAgregarExp;
-    private javax.swing.JButton btnAgregarExp3;
+    private javax.swing.JButton btnEnviarSolicitud;
     private javax.swing.JButton btnAgregarIdioma;
     private javax.swing.JButton btnAgregarReco;
     private javax.swing.JButton btnEditarCap;
@@ -674,7 +723,7 @@ public class NuevoCandidatoForm extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JTable tblCap;
+    private javax.swing.JTable tblCapacitaciones;
     private javax.swing.JTable tblCompetencias;
     private javax.swing.JTable tblExp;
     private javax.swing.JTable tblIdiomas;

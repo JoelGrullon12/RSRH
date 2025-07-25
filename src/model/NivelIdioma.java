@@ -39,4 +39,23 @@ public class NivelIdioma {
     public void setIdiomaCandidatos(List<IdiomaCandidato> idiomaCandidatos) {
         this.idiomaCandidatos = idiomaCandidatos;
     }
+
+    @Override
+    public String toString() {
+        return nombreNivel; // Esto es lo que se muestra en el JComboBox
+    }
+
+    // equals para poder hacer .setSelectedItem correctamente
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        NivelIdioma other = (NivelIdioma) obj;
+        return idNivel == other.idNivel;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(idNivel);
+    }
 }

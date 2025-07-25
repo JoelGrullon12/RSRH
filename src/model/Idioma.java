@@ -44,4 +44,23 @@ public class Idioma {
     public void setIdiomaCandidatos(List<IdiomaCandidato> idiomaCandidatos) {
         this.idiomaCandidatos = idiomaCandidatos;
     }
+
+    @Override
+    public String toString() {
+        return nombreIdioma; // Esto es lo que se muestra en el JComboBox
+    }
+
+    // equals para poder hacer .setSelectedItem correctamente
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Idioma other = (Idioma) obj;
+        return idIdioma == other.idIdioma;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(idIdioma);
+    }
 }

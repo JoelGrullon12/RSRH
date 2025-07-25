@@ -179,7 +179,7 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="jCheckBox1">
+    <Component class="javax.swing.JCheckBox" name="chkCursando">
       <Properties>
         <Property name="text" type="java.lang.String" value="Aun cursando"/>
       </Properties>

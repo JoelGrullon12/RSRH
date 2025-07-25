@@ -13,6 +13,8 @@ import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Properties;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
 import model.ExperienciaLaboral;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
@@ -161,7 +163,7 @@ public class AgregarExperienciaForm extends javax.swing.JInternalFrame {
         }
         
         if(txtPuesto.getText()==null|| txtPuesto.getText().isBlank()){
-            JOptionPane.showMessageDialog(this, "El campo de Empresa es requerido", "Campo Vacio", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "El campo de Puesto es requerido", "Campo Vacio", JOptionPane.WARNING_MESSAGE);
             return;
         }
         
@@ -172,6 +174,7 @@ public class AgregarExperienciaForm extends javax.swing.JInternalFrame {
             expLaboral.setSalario(new BigDecimal(txtSalario.getValue().toString()));
         
         expLaboral.setDescripcion(txtDesc.getText());
+
         UtilDateModel fechaDesdeModel = (UtilDateModel) datePickerDesde.getModel();
         expLaboral.setFechaDesde(fechaDesdeModel.getValue().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         UtilDateModel fechaHastaModel = (UtilDateModel) datePickerHasta.getModel();
@@ -179,6 +182,10 @@ public class AgregarExperienciaForm extends javax.swing.JInternalFrame {
 
         nuevoCandidatoForm.agregarExperienciaLaboral(expLaboral);
         this.dispose();
+        SwingUtilities.invokeLater(() -> {
+            getParent().revalidate();
+            getParent().repaint();
+        });
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
@@ -195,6 +202,10 @@ public class AgregarExperienciaForm extends javax.swing.JInternalFrame {
 
         nuevoCandidatoForm.recargarExperiencias();
         this.dispose();
+        SwingUtilities.invokeLater(() -> {
+            getParent().revalidate();
+            getParent().repaint();
+        });
     }//GEN-LAST:event_btnAgregarActionPerformed
 
 

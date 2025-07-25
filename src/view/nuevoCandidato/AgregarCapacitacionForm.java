@@ -9,10 +9,20 @@ import com.mysql.cj.protocol.Message;
 import common.DateLabelFormatter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Properties;
+
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
+import model.Capacitacion;
 import model.ExperienciaLaboral;
+import model.NivelCapacitacion;
+import model.Puesto;
+import service.NivelCapacitacionService;
+
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
@@ -27,33 +37,51 @@ public class AgregarCapacitacionForm extends javax.swing.JInternalFrame {
     private JDatePickerImpl datePickerDesde;
     private JDatePickerImpl datePickerHasta;
 
+    private Capacitacion editingCapacitacion;
+
+    private NivelCapacitacionService nivelCapacitacionService;
+
     /**
      * Creates new form AgregarExperienciaForm
      */
     public AgregarCapacitacionForm(NuevoCandidatoForm baseForm) {
         nuevoCandidatoForm=baseForm;
+        nivelCapacitacionService=new NivelCapacitacionService();
+
         initComponents();
         
-        Properties p = new Properties();
-        p.put("text.today", "Hoy");
-        p.put("text.month", "Mes");
-        p.put("text.year", "Año");
-        
-        UtilDateModel modelFechaDesde = new UtilDateModel();
-        modelFechaDesde.setSelected(true); // o setDate(año, mes, día)
+        btnAgregar.setText("Agregar");
+        btnAgregar.addActionListener(this::btnAgregarActionPerformed);
+    }
 
-        JDatePanelImpl datePanelDesde = new JDatePanelImpl(modelFechaDesde, p);
-        datePickerDesde = new JDatePickerImpl(datePanelDesde, new DateLabelFormatter());
-        panelFechaDesde.setLayout(new java.awt.FlowLayout());
-        panelFechaDesde.add(datePickerDesde);
+    public AgregarCapacitacionForm(NuevoCandidatoForm baseForm, Capacitacion cap) {
+        nuevoCandidatoForm=baseForm;
+        nivelCapacitacionService=new NivelCapacitacionService();
+
+        initComponents();
         
-        UtilDateModel modelFechaHasta = new UtilDateModel();
-        modelFechaHasta.setSelected(true); // o setDate(año, mes, día)
-        
-        JDatePanelImpl datePanelHasta = new JDatePanelImpl(modelFechaHasta, p);
-        datePickerHasta = new JDatePickerImpl(datePanelHasta, new DateLabelFormatter());
-        panelFechaHasta.setLayout(new java.awt.FlowLayout());
-        panelFechaHasta.add(datePickerHasta);
+        setTitle("Editar Capacitacion");
+
+        editingCapacitacion=cap;
+
+        txtNombreCapacitacion.setText(cap.getNombreCapacitacion());
+        txtInstitucion.setText(cap.getInstitucion());
+
+        NivelCapacitacion nivelSeleccionado=nivelCapacitacionService.findById(cap.getNivelId());
+        cmbNivel.setSelectedItem(nivelSeleccionado);
+
+        UtilDateModel modelFechaDesde= (UtilDateModel) datePickerDesde.getModel();
+        LocalDate desde=cap.getFechaDesde();
+        modelFechaDesde.setDate(desde.getYear(), desde.getMonthValue()-1, desde.getDayOfMonth());
+
+        UtilDateModel modelFechaHasta= (UtilDateModel) datePickerHasta.getModel();
+        LocalDate hasta=cap.getFechaHasta();
+        modelFechaHasta.setDate(hasta.getYear(), hasta.getMonthValue()-1, hasta.getDayOfMonth());
+
+        txtDesc.setText(cap.getDescripcion());
+
+        btnAgregar.setText("Editar");
+        btnAgregar.addActionListener(this::btnEditarActionPerformed);
     }
 
     /**
@@ -80,7 +108,7 @@ public class AgregarCapacitacionForm extends javax.swing.JInternalFrame {
         btnAgregar = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         cmbNivel = new javax.swing.JComboBox<>();
-        jCheckBox1 = new javax.swing.JCheckBox();
+        chkCursando = new javax.swing.JCheckBox();
         jPanel1 = new javax.swing.JPanel();
 
         setClosable(true);
@@ -115,65 +143,144 @@ public class AgregarCapacitacionForm extends javax.swing.JInternalFrame {
         jLabel7.setText("Desde:");
         getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, -1, -1));
 
-        btnAgregar.setText("Agregar");
-        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregarActionPerformed(evt);
-            }
-        });
         getContentPane().add(btnAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 260, -1, -1));
         getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 290, 10, -1));
 
-        cmbNivel.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tecnico", "Item 2", "Item 3", "Item 4" }));
+        DefaultComboBoxModel<NivelCapacitacion> modeloNivel = new DefaultComboBoxModel<>();
+
+        for (NivelCapacitacion p : nivelCapacitacionService.getAll()) {
+            modeloNivel.addElement(p);
+        }
+
+        cmbNivel.setModel(modeloNivel);
+
         getContentPane().add(cmbNivel, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 70, 500, -1));
 
-        jCheckBox1.setText("Aun cursando");
-        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox1ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(jCheckBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 110, -1, -1));
+        chkCursando.setText("Aun cursando");
+        chkCursando.addActionListener(this::chkCursandoActionPerformed);
+        getContentPane().add(chkCursando, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 110, -1, -1));
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 290, -1, -1));
 
         pack();
+
+        Properties p = new Properties();
+        p.put("text.today", "Hoy");
+        p.put("text.month", "Mes");
+        p.put("text.year", "Año");
+        
+        UtilDateModel modelFechaDesde = new UtilDateModel();
+        modelFechaDesde.setSelected(true); // o setDate(año, mes, día)
+
+        JDatePanelImpl datePanelDesde = new JDatePanelImpl(modelFechaDesde, p);
+        datePickerDesde = new JDatePickerImpl(datePanelDesde, new DateLabelFormatter());
+        panelFechaDesde.setLayout(new java.awt.FlowLayout());
+        panelFechaDesde.add(datePickerDesde);
+        
+        UtilDateModel modelFechaHasta = new UtilDateModel();
+        modelFechaHasta.setSelected(true); // o setDate(año, mes, día)
+        
+        JDatePanelImpl datePanelHasta = new JDatePanelImpl(modelFechaHasta, p);
+        datePickerHasta = new JDatePickerImpl(datePanelHasta, new DateLabelFormatter());
+        panelFechaHasta.setLayout(new java.awt.FlowLayout());
+        panelFechaHasta.add(datePickerHasta);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {
+        validarCampos();
         
-        // if(txtNombreCapacitacion.getText()==null|| txtNombreCapacitacion.getText().isBlank()){
-        //     JOptionPane.showMessageDialog(this, "El campo de Empresa es requerido", "Campo Vacio", JOptionPane.WARNING_MESSAGE);
-        //     return;
-        // }
-        
-        // if(txtInstitucion.getText()==null|| txtInstitucion.getText().isBlank()){
-        //     JOptionPane.showMessageDialog(this, "El campo de Empresa es requerido", "Campo Vacio", JOptionPane.WARNING_MESSAGE);
-        //     return;
-        // }
-        
-        // ExperienciaLaboral expLaboral=new ExperienciaLaboral();
-        // expLaboral.setEmpresa(txtNombreCapacitacion.getText().trim());
-        // expLaboral.setPuesto(txtInstitucion.getText().trim());
-        // if(txtSalario.getValue()!=null)
-        //     expLaboral.setSalario(new BigDecimal(txtSalario.getValue().toString()));
-        
-        // expLaboral.setDescripcion(txtDesc.getText());
-        // expLaboral.setFechaDesde((LocalDate)datePickerDesde.getModel().getValue());
-        // expLaboral.setFechaHasta((LocalDate)datePickerHasta.getModel().getValue());
-        // nuevoCandidatoForm.agregarExperienciaLaboral(expLaboral);
-        
-        //this.dispose();
-    }//GEN-LAST:event_btnAgregarActionPerformed
+        Capacitacion cap=new Capacitacion();
+        cap.setNombreCapacitacion(txtNombreCapacitacion.getText().trim());
+        cap.setInstitucion(txtInstitucion.getText().trim());
 
-    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox1ActionPerformed
+        NivelCapacitacion nivelSeleccionado=(NivelCapacitacion)cmbNivel.getSelectedItem();
+        cap.setNivelId(nivelSeleccionado.getIdNivel());
+                
+        UtilDateModel fechaDesdeModel = (UtilDateModel) datePickerDesde.getModel();
+        cap.setFechaDesde(fechaDesdeModel.getValue().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        UtilDateModel fechaHastaModel = (UtilDateModel) datePickerHasta.getModel();
+        cap.setFechaHasta(fechaHastaModel.getValue().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 
+        cap.setDescripcion(txtDesc.getText());
+        nuevoCandidatoForm.agregarCapacitacion(cap);
+        
+        this.dispose();
+        SwingUtilities.invokeLater(() -> {
+            getParent().revalidate();
+            getParent().repaint();
+        });
+    }
+
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {
+        validarCampos();
+                
+        editingCapacitacion.setNombreCapacitacion(txtNombreCapacitacion.getText().trim());
+        editingCapacitacion.setInstitucion(txtInstitucion.getText().trim());
+
+        NivelCapacitacion nivelSeleccionado=(NivelCapacitacion)cmbNivel.getSelectedItem();
+        editingCapacitacion.setNivelId(nivelSeleccionado.getIdNivel());
+                
+        UtilDateModel fechaDesdeModel = (UtilDateModel) datePickerDesde.getModel();
+        editingCapacitacion.setFechaDesde(fechaDesdeModel.getValue().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        UtilDateModel fechaHastaModel = (UtilDateModel) datePickerHasta.getModel();
+        editingCapacitacion.setFechaHasta(fechaHastaModel.getValue().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+
+        editingCapacitacion.setDescripcion(txtDesc.getText());
+
+        nuevoCandidatoForm.recargarCapacitaciones();
+        this.dispose();
+        SwingUtilities.invokeLater(() -> {
+            getParent().revalidate();
+            getParent().repaint();
+        });
+    }
+
+    private void chkCursandoActionPerformed(java.awt.event.ActionEvent evt) {
+        if(chkCursando.isSelected()){
+            UtilDateModel modelFechaHasta= (UtilDateModel) datePickerHasta.getModel();
+            LocalDate fechaActual=LocalDate.now();
+            modelFechaHasta.setDate(fechaActual.getYear(), fechaActual.getMonthValue()-1, fechaActual.getDayOfMonth());
+
+            datePickerHasta.setEnabled(false);
+        }else{
+            datePickerHasta.setEnabled(true);
+        }
+    }
+
+
+    private boolean validarCampos(){
+        if(txtNombreCapacitacion.getText()==null|| txtNombreCapacitacion.getText().isBlank()){
+            JOptionPane.showMessageDialog(this, "El campo de Carrera es requerido", "Campo Vacio", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        
+        if(txtInstitucion.getText()==null|| txtInstitucion.getText().isBlank()){
+            JOptionPane.showMessageDialog(this, "El campo de Institucion es requerido", "Campo Vacio", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        UtilDateModel fechaDesdeModel = (UtilDateModel) datePickerDesde.getModel();
+        LocalDate fechaDesde=fechaDesdeModel.getValue().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        
+        UtilDateModel fechaHastaModel = (UtilDateModel) datePickerHasta.getModel();
+        LocalDate fechaHasta=fechaHastaModel.getValue().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        if(fechaDesde.isAfter(LocalDate.now()) || fechaHasta.isAfter(LocalDate.now())){
+            JOptionPane.showMessageDialog(this, "Las fechas no pueden ser mas adelante que la fecha actual", "Valores invalidos", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        if(fechaDesde.isEqual(fechaHasta) || fechaDesde.isAfter(fechaHasta)){
+            JOptionPane.showMessageDialog(this, "La fecha Desde no puede ser despues despues o igual a la fecha Hasta", "Valores invalidos", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        return true;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
-    private javax.swing.JComboBox<String> cmbNivel;
-    private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JComboBox<NivelCapacitacion> cmbNivel;
+    private javax.swing.JCheckBox chkCursando;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

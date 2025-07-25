@@ -106,6 +106,15 @@ create table nivel_idioma(
     nombre_nivel varchar(8) not null
 );
 
+insert into nivel_idioma (nombre_nivel) values
+('Nativo'),
+('A1'),
+('A2'),
+('B1'),
+('B2'),
+('C1'),
+('C2');
+
 create table idiomas_candidatos(
     id_idioma_candidato int not null primary key auto_increment,
     candidato_id int not null,

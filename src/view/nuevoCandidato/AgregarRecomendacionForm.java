@@ -12,7 +12,11 @@ import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Properties;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
 import model.ExperienciaLaboral;
+import model.Recomendacion;
+
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
@@ -33,27 +37,17 @@ public class AgregarRecomendacionForm extends javax.swing.JInternalFrame {
     public AgregarRecomendacionForm(NuevoCandidatoForm baseForm) {
         nuevoCandidatoForm=baseForm;
         initComponents();
-        
-        // Properties p = new Properties();
-        // p.put("text.today", "Hoy");
-        // p.put("text.month", "Mes");
-        // p.put("text.year", "Año");
-        
-        // UtilDateModel modelFechaDesde = new UtilDateModel();
-        // modelFechaDesde.setSelected(true); // o setDate(año, mes, día)
+    }
 
-        // JDatePanelImpl datePanelDesde = new JDatePanelImpl(modelFechaDesde, p);
-        // datePickerDesde = new JDatePickerImpl(datePanelDesde, new DateLabelFormatter());
-        // panelFechaDesde.setLayout(new java.awt.FlowLayout());
-        // panelFechaDesde.add(datePickerDesde);
-        
-        // UtilDateModel modelFechaHasta = new UtilDateModel();
-        // modelFechaHasta.setSelected(true); // o setDate(año, mes, día)
-        
-        // JDatePanelImpl datePanelHasta = new JDatePanelImpl(modelFechaHasta, p);
-        // datePickerHasta = new JDatePickerImpl(datePanelHasta, new DateLabelFormatter());
-        // panelFechaHasta.setLayout(new java.awt.FlowLayout());
-        // panelFechaHasta.add(datePickerHasta);
+    public AgregarRecomendacionForm(NuevoCandidatoForm baseForm, Recomendacion reco) {
+        nuevoCandidatoForm=baseForm;
+        initComponents();
+        setTitle("Editar Recomendacion");
+
+        txtNombre.setText(reco.getNombreRecomendador());
+        txtEmpresa.setText(reco.getEmpresa());
+        txtPuesto.setText(reco.getPuesto());
+        txtContacto.setText(reco.getContacto());
     }
 
     /**
@@ -111,30 +105,40 @@ public class AgregarRecomendacionForm extends javax.swing.JInternalFrame {
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         
-        // if(txtEmpresa.getText()==null|| txtEmpresa.getText().isBlank()){
-        //     JOptionPane.showMessageDialog(this, "El campo de Empresa es requerido", "Campo Vacio", JOptionPane.WARNING_MESSAGE);
-        //     return;
-        // }
-        
-        // if(txtContacto.getText()==null|| txtContacto.getText().isBlank()){
-        //     JOptionPane.showMessageDialog(this, "El campo de Empresa es requerido", "Campo Vacio", JOptionPane.WARNING_MESSAGE);
-        //     return;
-        // }
-        
-        // ExperienciaLaboral expLaboral=new ExperienciaLaboral();
-        // expLtxtNombreEmpresa(txtEmpresa.txtNombretrim());
-        // expLaboral.setPuesto(txtContacto.getText().trim());
-        // if(txtSalario.getValue()!=null)
-        //     expLaboral.setSalario(new BigDecimal(txtSalario.getValue().toString()));
-        
-        // expLaboral.setDescripcion(txtDesc.getText());
-        // expLaboral.setFechaDesde((LocalDate)datePickerDesde.getModel().getValue());
-        // expLaboral.setFechaHasta((LocalDate)datePickerHasta.getModel().getValue());
-        // nuevoCandidatoForm.agregarExperienciaLaboral(expLaboral);
-        
-        // JOptionPane.showMetxtNombreg(this, expLaboral.getFechaDesde().toString(), "Error", JOptionPane.ERROR_MESSAGE);
+        if(txtNombre.getText()==null|| txtNombre.getText().isBlank()){
+            JOptionPane.showMessageDialog(this, "El campo de Nombre es requerido", "Campo Vacio", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-        //this.dispose();
+        if(txtEmpresa.getText()==null || txtEmpresa.getText().isBlank()){
+            JOptionPane.showMessageDialog(this, "El campo de Empresa es requerido", "Campo Vacio", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if(txtPuesto.getText()==null || txtPuesto.getText().isBlank()){
+            JOptionPane.showMessageDialog(this, "El campo de Puesto es requerido", "Campo Vacio", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        if(txtContacto.getText()==null || txtContacto.getText().isBlank()){
+            JOptionPane.showMessageDialog(this, "El campo de Empresa es requerido", "Campo Vacio", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        Recomendacion recomendacion=new Recomendacion();
+        recomendacion.setNombreRecomendador(txtNombre.getText().trim());
+        recomendacion.setEmpresa(txtEmpresa.getText().trim());
+        recomendacion.setPuesto(txtPuesto.getText().trim());
+        recomendacion.setContacto(txtContacto.getText().trim());
+
+        nuevoCandidatoForm.agregarRecomendacion(recomendacion);
+        nuevoCandidatoForm.recargarRecomendaciones();
+
+        this.dispose();
+        SwingUtilities.invokeLater(() -> {
+            getParent().revalidate();
+            getParent().repaint();
+        });
     }//GEN-LAST:event_btnAgregarActionPerformed
 
 

@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Properties;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import model.Competencia;
 import model.ExperienciaLaboral;
@@ -42,6 +43,8 @@ public class AgregarCompetenciaForm extends javax.swing.JInternalFrame {
     public AgregarCompetenciaForm(NuevoCandidatoForm baseForm, Competencia comp) {
         nuevoCandidatoForm=baseForm;
         initComponents();
+
+        setTitle("Editar Competencia");
 
         editCompetencia=comp;
 
@@ -98,28 +101,28 @@ public class AgregarCompetenciaForm extends javax.swing.JInternalFrame {
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         
-        // if(txtCompetencia.getText()==null|| txtCompetencia.getText().isBlank()){
-        //     JOptionPane.showMessageDialog(this, "El campo de Competencia es requerido", "Campo Vacio", JOptionPane.WARNING_MESSAGE);
-        //     return;
-        // }
+        if(txtCompetencia.getText()==null || txtCompetencia.getText().isBlank()){
+            JOptionPane.showMessageDialog(this, "El campo de Competencia es requerido", "Campo Vacio", JOptionPane.WARNING_MESSAGE);
+            return;
+        } 
+
+        if(txtDesc.getText()==null || txtDesc.getText().isBlank()){
+            JOptionPane.showMessageDialog(this, "El campo Descripcion es requerido", "Campo Vacio", JOptionPane.WARNING_MESSAGE);
+            return;
+        } 
         
-        // if(txtPuesto.getText()==null|| txtPuesto.getText().isBlank()){
-        //     JOptionPane.showMessageDialog(this, "El campo de Empresa es requerido", "Campo Vacio", JOptionPane.WARNING_MESSAGE);
-        //     return;
-        // }
+        Competencia competencia=new Competencia();
+        competencia.setNombreCompetencia(txtCompetencia.getText().trim());        
+        competencia.setDescripcion(txtDesc.getText().trim());
+        nuevoCandidatoForm.agregarCompetencia(competencia);
         
-        // ExperienciaLaboral expLaboral=new ExperienciaLaboral();
-        // expLaboral.setEmpresa(txtCompetencia.getText().trim());
-        // expLaboral.setPuesto(txtPuesto.getText().trim());
-        // if(txtSalario.getValue()!=null)
-        //     expLaboral.setSalario(new BigDecimal(txtSalario.getValue().toString()));
-        
-        // expLaboral.setDescripcion(txtDesc.getText());
-        // expLaboral.setFechaDesde((LocalDate)datePickerDesde.getModel().getValue());
-        // expLaboral.setFechaHasta((LocalDate)datePickerHasta.getModel().getValue());
-        // nuevoCandidatoForm.agregarExperienciaLaboral(expLaboral);
-        
+        nuevoCandidatoForm.recargarCompetencias();
+
         this.dispose();
+        SwingUtilities.invokeLater(() -> {
+            getParent().revalidate();
+            getParent().repaint();
+        });
     }//GEN-LAST:event_btnAgregarActionPerformed
 
 

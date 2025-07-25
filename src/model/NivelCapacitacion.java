@@ -35,4 +35,23 @@ public class NivelCapacitacion {
     public void setCapacitaciones(List<Capacitacion> capacitaciones) {
         this.capacitaciones = capacitaciones;
     }
+
+    @Override
+    public String toString() {
+        return nombreNivel; // Esto es lo que se muestra en el JComboBox
+    }
+
+    // equals para poder hacer .setSelectedItem correctamente
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        NivelCapacitacion other = (NivelCapacitacion) obj;
+        return idNivel == other.idNivel;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(idNivel);
+    }
 }
