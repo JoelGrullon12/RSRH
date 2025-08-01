@@ -63,7 +63,7 @@ public class EmpleadoRepository {
     }
 
     public void save(Empleado e) {
-        String sql = "INSERT INTO empleados(cedula, nombre_empleado, apellido_empleado, fecha_ingreso, departamento_id, puesto, eliminado) " +
+        String sql = "INSERT INTO empleados(cedula, nombre_empleado, apellido_empleado, fecha_ingreso, puesto_id, eliminado) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, e.getCedula());
@@ -74,9 +74,8 @@ public class EmpleadoRepository {
             } else {
                 stmt.setNull(4, Types.DATE);
             }
-            stmt.setInt(5, e.getDepartamentoId());
-            stmt.setString(6, e.getPuesto());
-            stmt.setObject(7, e.getEliminado());
+            stmt.setInt(5, e.getPuestoId());
+            stmt.setObject(6, e.getEliminado());
             stmt.executeUpdate();
 
             try (ResultSet rs = stmt.getGeneratedKeys()) {
@@ -90,7 +89,7 @@ public class EmpleadoRepository {
     }
 
     public void update(Empleado e) {
-        String sql = "UPDATE empleados SET cedula = ?, nombre_empleado = ?, apellido_empleado = ?, fecha_ingreso = ?, departamento_id = ?, puesto = ?, eliminado = ? " +
+        String sql = "UPDATE empleados SET cedula = ?, nombre_empleado = ?, apellido_empleado = ?, fecha_ingreso = ?, puesto_id = ?, eliminado = ? " +
                      "WHERE id_empleado = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, e.getCedula());
@@ -101,10 +100,9 @@ public class EmpleadoRepository {
             } else {
                 stmt.setNull(4, Types.DATE);
             }
-            stmt.setInt(5, e.getDepartamentoId());
-            stmt.setString(6, e.getPuesto());
-            stmt.setObject(7, e.getEliminado());
-            stmt.setInt(8, e.getIdEmpleado());
+            stmt.setInt(5, e.getPuestoId());
+            stmt.setObject(6, e.getEliminado());
+            stmt.setInt(7, e.getIdEmpleado());
             stmt.executeUpdate();
         } catch (SQLException ex) {
             throw new RuntimeException("Error actualizando empleado", ex);
@@ -131,8 +129,7 @@ public class EmpleadoRepository {
         if (fecha != null) {
             e.setFechaIngreso(fecha.toLocalDate());
         }
-        e.setDepartamentoId(rs.getInt("departamento_id"));
-        e.setPuesto(rs.getString("puesto"));
+        e.setPuestoId(rs.getInt("puesto_id"));
         e.setEliminado(rs.getObject("eliminado") != null ? rs.getBoolean("eliminado") : null);
         return e;
     }

@@ -7,18 +7,23 @@ package view.nuevoCandidato;
 import common.DateLabelFormatter;
 import common.DateUtil;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
+
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
+import model.Candidato;
 import model.Capacitacion;
 import model.Competencia;
 
@@ -222,7 +227,7 @@ public class NuevoCandidatoForm extends javax.swing.JInternalFrame {
         btnVerPuestos = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         txtSalario = new javax.swing.JFormattedTextField();
-        txtEmail = new javax.swing.JFormattedTextField();
+        txtEmail = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         btnEnviarSolicitud = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JSeparator();
@@ -516,7 +521,13 @@ public class NuevoCandidatoForm extends javax.swing.JInternalFrame {
         txtCedula.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         jPanel1.add(txtCedula, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 80, 620, -1));
 
-        cmbPuesto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
+        DefaultComboBoxModel<Puesto> modeloPuesto = new DefaultComboBoxModel<>();
+
+        for (Puesto p : puestoService.getAll()) {
+            modeloPuesto.addElement(p);
+        }
+
+        cmbPuesto.setModel(modeloPuesto);
         jPanel1.add(cmbPuesto, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 140, 530, -1));
 
         jLabel5.setText("Email");
@@ -531,7 +542,6 @@ public class NuevoCandidatoForm extends javax.swing.JInternalFrame {
         txtSalario.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         jPanel1.add(txtSalario, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 170, 620, -1));
 
-        txtEmail.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         jPanel1.add(txtEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 110, 620, -1));
 
         jLabel7.setText("Puesto");
@@ -679,7 +689,57 @@ public class NuevoCandidatoForm extends javax.swing.JInternalFrame {
     }
 
     private void btnEnviarSolicitudClick(java.awt.event.ActionEvent evt){
+        Candidato nuevoCandidato=new Candidato();
+        nuevoCandidato.setNombre(txtNombre.getText());
+        nuevoCandidato.setApellido(txtApellido.getText());
+        nuevoCandidato.setCedula(txtCedula.getText());
+        nuevoCandidato.setEmail(txtEmail.getText());
 
+        Puesto puestoSeleccionado=(Puesto)cmbPuesto.getSelectedItem();
+        nuevoCandidato.setPuestoId(puestoSeleccionado.getIdPuesto());
+
+        if(txtSalario.getValue()!=null)
+            nuevoCandidato.setSalario(new BigDecimal(txtSalario.getValue().toString()));
+        
+        Candidato candidatoInsertado=candidatoService.insert(nuevoCandidato, true);
+
+        for (ExperienciaLaboral exp : experienciasLaborales) {
+            exp.setCandidatoId(candidatoInsertado.getIdCandidato());
+
+            experienciaService.insert(exp);
+        }
+
+        for (Recomendacion rec : recomendaciones) {
+            rec.setCandidatoId(candidatoInsertado.getIdCandidato());
+
+            recomendacionService.insert(rec);
+        }
+
+        for (Competencia comp : competencias) {
+            comp.setCandidatoId(candidatoInsertado.getIdCandidato());
+
+            competenciaService.insert(comp);
+        }
+
+        for (IdiomaCandidato idi : idiomaCandidatos) {
+            idi.setCandidatoId(candidatoInsertado.getIdCandidato());
+
+            idiomaCandidatoService.insert(idi);
+        }
+
+        for (Capacitacion cap : capacitaciones) {
+            cap.setCandidatoId(candidatoInsertado.getIdCandidato());
+
+            capacitacionService.insert(cap);
+        }
+
+        JOptionPane.showMessageDialog(this, "Candidato insertado correctamente", "Exito", JOptionPane.DEFAULT_OPTION);
+        this.dispose();
+
+         SwingUtilities.invokeLater(() -> {
+            getParent().revalidate();
+            getParent().repaint();
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -700,7 +760,7 @@ public class NuevoCandidatoForm extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnEliminarIdioma;
     private javax.swing.JButton btnEliminarReco;
     private javax.swing.JButton btnVerPuestos;
-    private javax.swing.JComboBox<String> cmbPuesto;
+    private javax.swing.JComboBox<Puesto> cmbPuesto;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -730,7 +790,7 @@ public class NuevoCandidatoForm extends javax.swing.JInternalFrame {
     private javax.swing.JTable tblRecomendacion;
     private javax.swing.JTextField txtApellido;
     private javax.swing.JFormattedTextField txtCedula;
-    private javax.swing.JFormattedTextField txtEmail;
+    private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JFormattedTextField txtSalario;
     // End of variables declaration//GEN-END:variables

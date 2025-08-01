@@ -19,8 +19,8 @@ create table departamentos(
 
 create table puestos(
     id_puesto int not null primary key auto_increment,
-    nombre_puesto varchar(30) not null,
-    descripcion varchar(255) null,
+    nombre_puesto varchar(100) not null,
+    descripcion text null,
     salario_minimo decimal(10,2) null,
     salario_maximo decimal(10,2) null,
     riesgo_id int not null,
@@ -55,7 +55,7 @@ foreign key (puesto_id) references puestos(id_puesto);
 create table experiencias_laborales( 
     id_experiencia int not null primary key auto_increment,
     empresa varchar(100) not null,
-    puesto varchar(50) not null,
+    puesto varchar(100) not null,
     descripcion text null,
     fecha_desde date not null,
     fecha_hasta date not null,
@@ -71,10 +71,10 @@ foreign key (candidato_id) references candidatos(id_candidato);
 
 create table recomendaciones( -- personas que recomiendan a los candidatos
     id_recomendacion int not null primary key auto_increment,
-    nombre_recomendador varchar(50) not null,
-    empresa varchar(50) null,
-    puesto varchar(50) null,
-    contacto varchar(80) not null,
+    nombre_recomendador varchar(100) not null,
+    empresa varchar(100) null,
+    puesto varchar(100) null,
+    contacto varchar(100) not null,
     candidato_id int not null,
     eliminado bit null
 );
@@ -85,8 +85,8 @@ foreign key (candidato_id) references candidatos(id_candidato);
 
 create table competencias(
     id_competencia int not null primary key auto_increment,
-    nombre_competencia varchar(30) not null,
-    descripcion varchar(150) null,
+    nombre_competencia varchar(100) not null,
+    descripcion text null,
     candidato_id int not null,
     eliminado bit null
 );
@@ -97,7 +97,7 @@ foreign key (candidato_id) references candidatos(id_candidato);
 
 create table idiomas(
     id_idioma int not null primary key auto_increment,
-    nombre_idioma varchar(15) not null,
+    nombre_idioma varchar(20) not null,
     eliminado bit null
 );
 
@@ -150,7 +150,7 @@ insert into niveles_capacitacion (nombre_nivel) values
 create table capacitaciones(
     id_capacitacion int not null primary key auto_increment,
     nombre_capacitacion varchar(30) not null,
-    descripcion varchar(255) null,
+    descripcion text null,
     nivel_id int not null,
     fecha_desde date null,
     fecha_hasta date null,
@@ -173,8 +173,7 @@ create table empleados(
     nombre_empleado varchar(50) not null,
     apellido_empleado varchar(50) not null,
     fecha_ingreso date,
-    departamento_id int not null,
-    puesto varchar(30),
+    puesto_id int not null,
     eliminado bit null
 );
 

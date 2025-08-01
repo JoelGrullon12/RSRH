@@ -186,7 +186,9 @@ public class AgregarCapacitacionForm extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {
-        validarCampos();
+        if(!camposSonValidos()){
+            return;
+        }
         
         Capacitacion cap=new Capacitacion();
         cap.setNombreCapacitacion(txtNombreCapacitacion.getText().trim());
@@ -211,7 +213,9 @@ public class AgregarCapacitacionForm extends javax.swing.JInternalFrame {
     }
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {
-        validarCampos();
+        if(!camposSonValidos()){
+            return;
+        }
                 
         editingCapacitacion.setNombreCapacitacion(txtNombreCapacitacion.getText().trim());
         editingCapacitacion.setInstitucion(txtInstitucion.getText().trim());
@@ -247,7 +251,7 @@ public class AgregarCapacitacionForm extends javax.swing.JInternalFrame {
     }
 
 
-    private boolean validarCampos(){
+    private boolean camposSonValidos(){
         if(txtNombreCapacitacion.getText()==null|| txtNombreCapacitacion.getText().isBlank()){
             JOptionPane.showMessageDialog(this, "El campo de Carrera es requerido", "Campo Vacio", JOptionPane.WARNING_MESSAGE);
             return false;

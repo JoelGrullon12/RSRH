@@ -53,6 +53,17 @@ public class CandidatoService implements IService<Candidato> {
         }
     }
 
+    public Candidato insert(Candidato c, boolean returnEntity) {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            Candidato nuevoCandidato=uow.candidatos().save(c);
+            uow.save();
+            return nuevoCandidato;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new Candidato();
+        }
+    }
+
     @Override
     public boolean update(Candidato c) {
         try (UnitOfWork uow = new UnitOfWork()) {

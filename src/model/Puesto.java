@@ -117,4 +117,23 @@ public class Puesto {
     public void setCandidatos(List<Candidato> candidatos) {
         this.candidatos = candidatos;
     }
+
+    @Override
+    public String toString() {
+        return nombrePuesto; // Esto es lo que se muestra en el JComboBox
+    }
+
+    // equals para poder hacer .setSelectedItem correctamente
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Puesto other = (Puesto) obj;
+        return idPuesto == other.idPuesto;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(idPuesto);
+    }
 }

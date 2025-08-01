@@ -36,7 +36,7 @@ public class SeedBD {
             nuevoEmpleado.setCedula("00123456789");
             nuevoEmpleado.setNombreEmpleado("Administrador");
             nuevoEmpleado.setApellidoEmpleado("Sistema");
-            nuevoEmpleado.setDepartamentoId(dep.getIdDepartamento());
+            nuevoEmpleado.setPuestoId(dep.getIdDepartamento());
             empServicio.insert(nuevoEmpleado);
             
             empleado=empServicio.findByCedula("00123456789");

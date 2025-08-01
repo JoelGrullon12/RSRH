@@ -47,7 +47,7 @@ public class CandidatoRepository {
         return list;
     }
 
-    public void save(Candidato c) {
+    public Candidato save(Candidato c) {
         String sql = "INSERT INTO candidatos(cedula, nombre, apellido, email, puesto_id, salario, eliminado) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -65,12 +65,14 @@ public class CandidatoRepository {
                     c.setIdCandidato(rs.getInt(1));
                 }
             }
+
+            return c;
         } catch (SQLException e) {
             throw new RuntimeException("Error insertando candidato", e);
         }
     }
 
-    public void update(Candidato c) {
+    public Candidato update(Candidato c) {
         String sql = "UPDATE candidatos SET cedula = ?, nombre = ?, apellido = ?, email = ?, puesto_id = ?, salario = ?, eliminado = ? " +
                      "WHERE id_candidato = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -83,6 +85,8 @@ public class CandidatoRepository {
             stmt.setObject(7, c.getEliminado());
             stmt.setInt(8, c.getIdCandidato());
             stmt.executeUpdate();
+
+            return c;
         } catch (SQLException e) {
             throw new RuntimeException("Error actualizando candidato", e);
         }

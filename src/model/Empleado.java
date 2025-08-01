@@ -13,11 +13,10 @@ public class Empleado {
     private String nombreEmpleado;
     private String apellidoEmpleado;
     private LocalDate fechaIngreso;
-    private int departamentoId;
-    private String puesto;
+    private int puestoId;
     private Boolean eliminado;
 
-    private Departamento departamento;
+    private Puesto puesto;
 
     public int getIdEmpleado() {
         return idEmpleado;
@@ -59,20 +58,12 @@ public class Empleado {
         this.fechaIngreso = fechaIngreso;
     }
 
-    public int getDepartamentoId() {
-        return departamentoId;
+    public int getPuestoId() {
+        return puestoId;
     }
 
-    public void setDepartamentoId(int departamentoId) {
-        this.departamentoId = departamentoId;
-    }
-
-    public String getPuesto() {
-        return puesto;
-    }
-
-    public void setPuesto(String puesto) {
-        this.puesto = puesto;
+    public void setPuestoId(int puestoId) {
+        this.puestoId = puestoId;
     }
 
     public Boolean getEliminado() {
@@ -83,11 +74,11 @@ public class Empleado {
         this.eliminado = eliminado;
     }
 
-    public Departamento getDepartamento() {
-        return departamento;
+    public Puesto getPuesto() {
+        return puesto;
     }
 
-    public void setDepartamento(Departamento departamento) {
-        this.departamento = departamento;
+    public void setPuesto(Puesto puesto) {
+        this.puesto = puesto;
     }
 }

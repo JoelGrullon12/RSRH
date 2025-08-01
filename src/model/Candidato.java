@@ -18,6 +18,7 @@ public class Candidato {
     private Boolean eliminado;
 
     private Puesto puesto;
+    private List<ExperienciaLaboral> experienciaLaborales;
     private List<Recomendacion> recomendaciones;
     private List<Competencia> competencias;
     private List<IdiomaCandidato> idiomas;
@@ -93,6 +94,14 @@ public class Candidato {
 
     public void setPuesto(Puesto puesto) {
         this.puesto = puesto;
+    }
+
+    public List<ExperienciaLaboral> getExperienciaLaborales() {
+        return experienciaLaborales;
+    }
+
+    public void setExperienciasLaborales(List<ExperienciaLaboral> experienciaLaborales) {
+        this.experienciaLaborales = experienciaLaborales;
     }
 
     public List<Recomendacion> getRecomendaciones() {
