@@ -150,6 +150,13 @@ public class MainPage extends javax.swing.JFrame {
         nuevoCandidato.setVisible(true);
     }//GEN-LAST:event_openMenuItemActionPerformed
 
+    private void mostrarListadoPuestos() {
+        ListadoPuestosForm listado = new ListadoPuestosForm();
+        mainDesktop.add(listado);
+        listado.setVisible(true);
+    }
+
+
     /**
      * @param args the command line arguments
      */
