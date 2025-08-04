@@ -64,7 +64,7 @@ public class EmpleadoRepository {
 
     public void save(Empleado e) {
         String sql = "INSERT INTO empleados(cedula, nombre_empleado, apellido_empleado, fecha_ingreso, puesto_id, eliminado) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                     "VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, e.getCedula());
             stmt.setString(2, e.getNombreEmpleado());

@@ -29,6 +29,26 @@ create table puestos(
     eliminado bit null
 );
 
+INSERT INTO `sistema_rrhh`.`puestos`
+(`nombre_puesto`,
+`descripcion`,
+`salario_minimo`,
+`salario_maximo`,
+`riesgo_id`,
+`departamento_id`,
+`vacantes`,
+`eliminado`)
+VALUES
+('QA',
+'Automatizador QA',
+50000,
+80000,
+3,
+1,
+2,
+null);
+
+
 alter table puestos
 add constraint fk_riesgo_puesto
 foreign key (riesgo_id) references riesgos_puesto(id_riesgo);

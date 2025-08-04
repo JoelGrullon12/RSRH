@@ -4,6 +4,8 @@
  */
 package view;
 
+import javax.swing.JLayeredPane;
+
 import view.nuevoCandidato.NuevoCandidatoForm;
 
 /**
@@ -19,6 +21,14 @@ public class MainPage extends javax.swing.JFrame {
 //        LoginForm login=new LoginForm(this, true);
 //        login.setVisible(true);
         initComponents();
+
+        ListadoPuestosForm listado = new ListadoPuestosForm();
+        listado.setBorder(null);
+        
+mainDesktop.add(listado); // mainDesktop es tu JDesktopPane
+listado.setVisible(true);
+
+mainDesktop.setLayer(listado, JLayeredPane.FRAME_CONTENT_LAYER);
     }
 
     /**
