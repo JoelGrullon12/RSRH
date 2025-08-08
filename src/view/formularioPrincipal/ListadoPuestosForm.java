@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
  */
-package view;
+package view.formularioPrincipal;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 import common.WrapLayout;
 import model.Puesto;
 import service.PuestoService;
+import view.nuevoCandidato.NuevoCandidatoForm;
 
 /**
  *
@@ -51,6 +52,7 @@ public class ListadoPuestosForm extends javax.swing.JInternalFrame {
 
         scrollPane = new javax.swing.JScrollPane();
         cardsPanel = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
 
         setBorder(null);
         addFocusListener(new java.awt.event.FocusAdapter() {
@@ -67,6 +69,9 @@ public class ListadoPuestosForm extends javax.swing.JInternalFrame {
         cardsPanel.setLayout(new WrapLayout(FlowLayout.LEFT, 10, 10));
         scrollPane.setViewportView(cardsPanel);
 
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel1.setText("Lista de Vacantes disponibles");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -75,12 +80,17 @@ public class ListadoPuestosForm extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 466, Short.MAX_VALUE)
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -101,22 +111,40 @@ public class ListadoPuestosForm extends javax.swing.JInternalFrame {
         List<Puesto> puestos = dao.getAll();
 
         cardsPanel.removeAll();
-
-        for (Puesto p : puestos) {
-            cardsPanel.add(crearCardPuesto(p));
-            cardsPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Espacio entre cards
+        
+        for (Puesto puesto : puestos) {
+            CardPuestoPanel card = new CardPuestoPanel(
+                puesto.getNombrePuesto(),
+                puesto.getSalarioMinimo(),
+                puesto.getSalarioMaximo(),
+                e -> mostrarDetalles(puesto),
+                e -> aplicarVacante(puesto)
+            );
+            cardsPanel.add(card);
         }
 
         cardsPanel.revalidate();
         cardsPanel.repaint();
     }
 
+    private void mostrarDetalles(Puesto puesto){
+        
+    }
+
+    private void aplicarVacante(Puesto puesto){
+
+        NuevoCandidatoForm nuevoCandidatoForm=new NuevoCandidatoForm(getDesktopPane(), puesto);
+        getDesktopPane().add(nuevoCandidatoForm);
+        nuevoCandidatoForm.show();
+        nuevoCandidatoForm.setVisible(true);
+    }
+
     private JPanel crearCardPuesto(Puesto puesto) {
         JPanel card = new JPanel();
-card.setPreferredSize(new Dimension(200, 100)); // Tamaño del card
-card.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-card.add(new JLabel("Puesto: " + puesto.getNombrePuesto()));
-cardsPanel.add(card);
+        card.setPreferredSize(new Dimension(200, 100)); // Tamaño del card
+        card.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        card.add(new JLabel("Puesto: " + puesto.getNombrePuesto()));
+        cardsPanel.add(card);
         card.setBackground(new Color(245, 245, 245)); // Gris claro
 
         JLabel lblNombre = new JLabel("Puesto: " + puesto.getNombrePuesto());
@@ -141,6 +169,7 @@ cardsPanel.add(card);
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel cardsPanel;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane scrollPane;
     // End of variables declaration//GEN-END:variables
 }

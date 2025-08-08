@@ -74,7 +74,7 @@ public class NuevoCandidatoForm extends javax.swing.JInternalFrame {
     /**
      * Creates new form NuevoCandidatoForm
      */
-    public NuevoCandidatoForm(JDesktopPane desktopPanel) {
+    public NuevoCandidatoForm(JDesktopPane desktopPanel, Puesto puestoAplicado) {
 
         candidatoService = new CandidatoService();
         puestoService = new PuestoService();
@@ -96,6 +96,8 @@ public class NuevoCandidatoForm extends javax.swing.JInternalFrame {
         mainDesktop = desktopPanel;
 
         initComponents();
+
+        cmbPuesto.setSelectedItem(puestoAplicado);
     }
 
     public void agregarExperienciaLaboral(ExperienciaLaboral exp) {

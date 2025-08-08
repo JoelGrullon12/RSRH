@@ -6,6 +6,7 @@ package view;
 
 import javax.swing.JLayeredPane;
 
+import view.formularioPrincipal.ListadoPuestosForm;
 import view.nuevoCandidato.NuevoCandidatoForm;
 
 /**
@@ -24,7 +25,7 @@ public class MainPage extends javax.swing.JFrame {
 
         ListadoPuestosForm listado = new ListadoPuestosForm();
         listado.setBorder(null);
-        
+
 mainDesktop.add(listado); // mainDesktop es tu JDesktopPane
 listado.setVisible(true);
 
