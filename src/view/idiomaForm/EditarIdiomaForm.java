@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package view;
+package view.idiomaForm;
 import model.Idioma;
 import service.IdiomaService;
 import javax.swing.*;
@@ -26,7 +26,7 @@ public class EditarIdiomaForm extends javax.swing.JFrame {
 
         initComponents();
 
-      
+            this.idiomaService = new IdiomaService();
 
         cargarDatos();
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);

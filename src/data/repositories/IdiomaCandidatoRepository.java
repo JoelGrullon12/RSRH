@@ -43,6 +43,22 @@ public class IdiomaCandidatoRepository {
         } catch (SQLException e) {
             throw new RuntimeException("Error listando idiomas de candidatos", e);
         }
+        return list; 
+    }
+
+    public List<IdiomaCandidato> findAllByCandidatoId(int candidatoId) {
+        List<IdiomaCandidato> list = new ArrayList<>();
+        String sql = "SELECT * FROM idiomas_candidatos where candidato_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, candidatoId);
+            try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                list.add(mapRow(rs));
+            }
+        }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error listando idiomas de candidatos", e);
+        }
         return list;
     }
 
@@ -78,7 +94,7 @@ public class IdiomaCandidatoRepository {
     }
 
     public void delete(int id) {
-        String sql = "DELETE FROM idiomas_candidatos WHERE id_idioma_candidato = ?";
+        String sql = "UPDATE idiomas_candidatos SET eliminado = 1 WHERE id_idioma_candidato = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();

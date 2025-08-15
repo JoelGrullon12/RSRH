@@ -25,7 +25,7 @@ public class EmpleadoRepository {
     }
 
     public Empleado findById(int id) {
-        String sql = "SELECT * FROM empleados WHERE id_empleado = ?";
+        String sql = "SELECT * FROM empleados WHERE id_empleado = ? and (eliminado is null or eliminado = 0)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -37,7 +37,7 @@ public class EmpleadoRepository {
     }
     
     public Empleado findByCedula(String cedula) {
-        String sql = "SELECT * FROM empleados WHERE cedula = ?";
+        String sql = "SELECT * FROM empleados WHERE cedula = ? and (eliminado is null or eliminado = 0)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, cedula);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -50,7 +50,7 @@ public class EmpleadoRepository {
 
     public List<Empleado> findAll() {
         List<Empleado> list = new ArrayList<>();
-        String sql = "SELECT * FROM empleados";
+        String sql = "SELECT * FROM empleados  where (eliminado is null or eliminado = 0)";
         try (PreparedStatement stmt = connection.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
@@ -88,6 +88,17 @@ public class EmpleadoRepository {
         }
     }
 
+    public void saveCandidatoAsEmpleado(int idCandidato) {
+        String sql = "INSERT INTO empleados (cedula, nombre_empleado, apellido_empleado, fecha_ingreso, puesto_id) " +
+                            "SELECT cedula, nombre, apellido, CURDATE(), puesto_id FROM candidatos WHERE id_candidato = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, idCandidato);
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            throw new RuntimeException("Error insertando nuevo empleado de candidatos", ex);
+        }
+    }
+
     public void update(Empleado e) {
         String sql = "UPDATE empleados SET cedula = ?, nombre_empleado = ?, apellido_empleado = ?, fecha_ingreso = ?, puesto_id = ?, eliminado = ? " +
                      "WHERE id_empleado = ?";
@@ -110,7 +121,7 @@ public class EmpleadoRepository {
     }
 
     public void delete(int id) {
-        String sql = "DELETE FROM empleados WHERE id_empleado = ?";
+        String sql = "UPDATE empleados SET eliminado = 1 WHERE id_empleado = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();

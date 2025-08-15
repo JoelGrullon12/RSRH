@@ -21,7 +21,7 @@ public class CompetenciaRepository {
     }
 
     public Competencia findById(int id) {
-        String sql = "SELECT * FROM competencias WHERE id_competencia = ?";
+        String sql = "SELECT * FROM competencias WHERE id_competencia = ? and (eliminado is null or eliminado = 0)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -34,12 +34,28 @@ public class CompetenciaRepository {
 
     public List<Competencia> findAll() {
         List<Competencia> list = new ArrayList<>();
-        String sql = "SELECT * FROM competencias";
+        String sql = "SELECT * FROM competencias where (eliminado is null or eliminado = 0)";
         try (PreparedStatement stmt = connection.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 list.add(mapRow(rs));
             }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error listando competencias", e);
+        }
+        return list;
+    }
+
+    public List<Competencia> findAllByCandidatoId(int candidatoId) {
+        List<Competencia> list = new ArrayList<>();
+        String sql = "SELECT * FROM competencias where candidato_id = ? and (eliminado is null or eliminado = 0)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, candidatoId);
+            try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                list.add(mapRow(rs));
+            }
+        }
         } catch (SQLException e) {
             throw new RuntimeException("Error listando competencias", e);
         }
@@ -80,7 +96,7 @@ public class CompetenciaRepository {
     }
 
     public void delete(int id) {
-        String sql = "DELETE FROM competencias WHERE id_competencia = ?";
+        String sql = "UPDATE competencias SET eliminado = 1 WHERE id_competencia = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();

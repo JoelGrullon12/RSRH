@@ -22,7 +22,7 @@ public class ExperienciaLaboralRepository {
     }
 
     public ExperienciaLaboral findById(int id) {
-        String sql = "SELECT * FROM experiencias_laborales WHERE id_experiencia = ?";
+        String sql = "SELECT * FROM experiencias_laborales WHERE id_experiencia = ? and (eliminado is null or eliminado = 0)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -35,12 +35,28 @@ public class ExperienciaLaboralRepository {
 
     public List<ExperienciaLaboral> findAll() {
         List<ExperienciaLaboral> list = new ArrayList<>();
-        String sql = "SELECT * FROM experiencias_laborales";
+        String sql = "SELECT * FROM experiencias_laborales where (eliminado is null or eliminado = 0)";
         try (PreparedStatement stmt = connection.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 list.add(mapRow(rs));
             }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error listando experiencias laborales", e);
+        }
+        return list;
+    }
+
+    public List<ExperienciaLaboral> findAllByCandidatoId(int candidatoId) {
+        List<ExperienciaLaboral> list = new ArrayList<>();
+        String sql = "SELECT * FROM experiencias_laborales where candidato_id = ? and (eliminado is null or eliminado = 0)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, candidatoId);
+            try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                list.add(mapRow(rs));
+            }
+        }
         } catch (SQLException e) {
             throw new RuntimeException("Error listando experiencias laborales", e);
         }
@@ -107,7 +123,7 @@ public class ExperienciaLaboralRepository {
     }
 
     public void delete(int id) {
-        String sql = "DELETE FROM experiencias_laborales WHERE id_experiencia = ?";
+        String sql = "UPDATE experiencias_laborales SET eliminado = 1 WHERE id_experiencia = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();

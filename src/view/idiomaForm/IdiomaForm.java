@@ -1,4 +1,4 @@
-package view;
+package view.idiomaForm;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -23,14 +23,14 @@ import javax.swing.event.ListSelectionListener;
  *
  * @author LENOVO
  */
-public class IdiomaForm extends javax.swing.JFrame {
+public class IdiomaForm extends javax.swing.JInternalFrame {
     
      private DefaultTableModel tblModel;
     private int filaSeleccionada = -1;
     private final IdiomaService idiomaService;
     private List<Idioma> listaIdiomas;
 
-    public IdiomaForm() throws SQLException {
+    public IdiomaForm() {
         this.idiomaService = new IdiomaService();
         initComponents();
         initTable();
@@ -74,7 +74,7 @@ public class IdiomaForm extends javax.swing.JFrame {
                 tblModel.addRow(new Object[]{
                     idi.getIdIdioma(), 
                     idi.getNombreIdioma(), 
-                     
+                    //idi.getNivel() != null ? idi.getNivel() : ""
                 });
             }
             
@@ -104,7 +104,6 @@ public class IdiomaForm extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
@@ -121,7 +120,8 @@ public class IdiomaForm extends javax.swing.JFrame {
         FrmTable = new javax.swing.JTable();
         jTabbedPane1 = new javax.swing.JTabbedPane();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setClosable(true);
 
         jPanel2.setLayout(new java.awt.BorderLayout());
 
@@ -153,23 +153,17 @@ public class IdiomaForm extends javax.swing.JFrame {
         jPanel1.add(deletebtn);
 
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Agregar idiomas", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14))); // NOI18N
-        jPanel5.setLayout(new java.awt.GridBagLayout());
+        jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         Idiomalabel.setText("Idioma:");
-        jPanel5.add(Idiomalabel, new java.awt.GridBagConstraints());
+        jPanel5.add(Idiomalabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 35, -1, -1));
 
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 6;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(10, 5, 10, 5);
-        jPanel5.add(jTextField1, gridBagConstraints);
+        jPanel5.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 30, 180, -1));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI Light", 1, 18)); // NOI18N
         jLabel2.setText("Gestión de Idiomas");
@@ -263,15 +257,15 @@ public class IdiomaForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void EditbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditbtnActionPerformed
-    int filaSeleccionada = FrmTable.getSelectedRow();
-if (filaSeleccionada < 0) {
-    JOptionPane.showMessageDialog(this, "Seleccione un idioma para editar.");
-    return;
-}
+        int filaSeleccionada = FrmTable.getSelectedRow();
+        if (filaSeleccionada < 0) {
+            JOptionPane.showMessageDialog(this, "Seleccione un idioma para editar.");
+            return;
+        }
 
-Idioma idiomaSeleccionado = listaIdiomas.get(filaSeleccionada);
-EditarIdiomaForm editarIdiomaForm = new EditarIdiomaForm(idiomaSeleccionado, this);
-editarIdiomaForm.setVisible(true);
+        Idioma idiomaSeleccionado = listaIdiomas.get(filaSeleccionada);
+        EditarIdiomaForm editarIdiomaForm = new EditarIdiomaForm(idiomaSeleccionado, this);
+        editarIdiomaForm.setVisible(true);
 
     }//GEN-LAST:event_EditbtnActionPerformed
 
@@ -286,7 +280,7 @@ editarIdiomaForm.setVisible(true);
 
     Idioma idioma = new Idioma();
     idioma.setNombreIdioma(nombre);
-     
+    //idioma.setNivel(nivel); 
 
     if (idiomaService.insert(idioma)) {
         cargarIdiomasEnTabla();
@@ -326,12 +320,7 @@ editarIdiomaForm.setVisible(true);
      */
     public static void main(String args[]) {
          java.awt.EventQueue.invokeLater(() -> {
-        try {
             new IdiomaForm().setVisible(true);
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Error conectando a la base de datos: " + ex.getMessage());
-        }
     });
     }
 

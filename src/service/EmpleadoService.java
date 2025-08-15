@@ -27,6 +27,21 @@ public class EmpleadoService implements IService<Empleado> {
         }
     }
 
+    public List<Empleado> getAllWithRelationships() {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            List<Empleado> listaEmpleados= uow.empleados().findAll();
+
+            for (Empleado e : listaEmpleados) {
+                e.setPuesto(uow.puestos().findById(e.getPuestoId()));
+            }
+
+            return listaEmpleados;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return List.of();
+        }
+    }
+
     @Override
     public Empleado findById(int id) {
         try (UnitOfWork uow = new UnitOfWork()) {
@@ -41,6 +56,17 @@ public class EmpleadoService implements IService<Empleado> {
     public boolean insert(Empleado e) {
         try (UnitOfWork uow = new UnitOfWork()) {
             uow.empleados().save(e);
+            uow.save();
+            return true;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean convertirCandidatoEnEmpleado(int id) {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            uow.empleados().saveCandidatoAsEmpleado(id);
             uow.save();
             return true;
         } catch (SQLException ex) {

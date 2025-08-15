@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import model.Candidato;
 import model.Departamento;
+
 public class CandidatoRepository {
 
     private final Connection connection;
@@ -22,7 +23,7 @@ public class CandidatoRepository {
     }
 
     public Candidato findById(int id) {
-        String sql = "SELECT * FROM candidatos WHERE id_candidato = ?";
+        String sql = "SELECT * FROM candidatos WHERE id_candidato = ? and (eliminado is null or eliminado=0) ";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -35,9 +36,9 @@ public class CandidatoRepository {
 
     public List<Candidato> findAll() {
         List<Candidato> list = new ArrayList<>();
-        String sql = "SELECT * FROM candidatos";
+        String sql = "SELECT * FROM candidatos where (eliminado is null or eliminado=0)";
         try (PreparedStatement stmt = connection.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+                ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 list.add(mapRow(rs));
             }
@@ -47,9 +48,25 @@ public class CandidatoRepository {
         return list;
     }
 
+    public List<Candidato> findAllByPuesto(int idPuesto) {
+        List<Candidato> list = new ArrayList<>();
+        String sql = "SELECT * FROM candidatos where puesto_id = ? and (eliminado is null or eliminado=0)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, idPuesto);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    list.add(mapRow(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error listando candidatos", e);
+        }
+        return list;
+    }
+
     public Candidato save(Candidato c) {
         String sql = "INSERT INTO candidatos(cedula, nombre, apellido, email, puesto_id, salario, eliminado) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, c.getCedula());
             stmt.setString(2, c.getNombre());
@@ -73,8 +90,9 @@ public class CandidatoRepository {
     }
 
     public Candidato update(Candidato c) {
-        String sql = "UPDATE candidatos SET cedula = ?, nombre = ?, apellido = ?, email = ?, puesto_id = ?, salario = ?, eliminado = ? " +
-                     "WHERE id_candidato = ?";
+        String sql = "UPDATE candidatos SET cedula = ?, nombre = ?, apellido = ?, email = ?, puesto_id = ?, salario = ?, eliminado = ? "
+                +
+                "WHERE id_candidato = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, c.getCedula());
             stmt.setString(2, c.getNombre());
@@ -92,8 +110,10 @@ public class CandidatoRepository {
         }
     }
 
+    
+
     public void delete(int id) {
-        String sql = "DELETE FROM candidatos WHERE id_candidato = ?";
+        String sql = "UPDATE candidatos SET eliminado = 1 WHERE id_candidato = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();

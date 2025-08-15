@@ -3,16 +3,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package view;
+package view.departamentoForm;
 import model.Departamento;
 import service.DepartamentoService;
-
+import view.departamentoForm.DepartamentosForm;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.SQLException;
-import view.DepartamentosForm;
 
 
 /**
@@ -32,7 +31,7 @@ public class EditarDepartamentoForm extends javax.swing.JFrame {
         
         initComponents();
         
-        
+            this.departamentoService = new DepartamentoService();
 
         cargarDatos(); // Cargar datos en los campos de texto
         

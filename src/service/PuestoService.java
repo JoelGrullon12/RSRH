@@ -30,6 +30,22 @@ public class PuestoService implements IService<Puesto> {
         }
     }
 
+    public List<Puesto> getAllWithRelationships() {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            List<Puesto> listaPuestos= uow.puestos().findAll();
+            
+            for (Puesto p  : listaPuestos) {
+                p.setRiesgo(uow.riesgosPuesto().findById(p.getRiesgoId()));
+                p.setDepartamento(uow.departamentos().findById(p.getDepartamentoId()));
+            }
+
+            return listaPuestos;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return List.of();
+        }
+    }
+
     @Override
     public Puesto findById(int id) {
         try (UnitOfWork uow = new UnitOfWork()) {

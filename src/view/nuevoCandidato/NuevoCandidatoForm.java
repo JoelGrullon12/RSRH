@@ -223,7 +223,7 @@ public class NuevoCandidatoForm extends javax.swing.JInternalFrame {
         txtApellido = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        txtCedula = new javax.swing.JFormattedTextField();
+        txtCedula = new javax.swing.JTextField();
         cmbPuesto = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
         btnVerPuestos = new javax.swing.JButton();
@@ -520,7 +520,6 @@ public class NuevoCandidatoForm extends javax.swing.JInternalFrame {
         jLabel4.setText("Cedula");
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 86, -1, -1));
 
-        txtCedula.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         jPanel1.add(txtCedula, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 80, 620, -1));
 
         DefaultComboBoxModel<Puesto> modeloPuesto = new DefaultComboBoxModel<>();
@@ -791,7 +790,7 @@ public class NuevoCandidatoForm extends javax.swing.JInternalFrame {
     private javax.swing.JTable tblIdiomas;
     private javax.swing.JTable tblRecomendacion;
     private javax.swing.JTextField txtApellido;
-    private javax.swing.JFormattedTextField txtCedula;
+    private javax.swing.JTextField txtCedula;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JFormattedTextField txtSalario;

@@ -21,7 +21,7 @@ public class IdiomaRepository {
     }
 
     public Idioma findById(int id) {
-        String sql = "SELECT * FROM idiomas WHERE id_idioma = ?";
+        String sql = "SELECT * FROM idiomas WHERE id_idioma = ? and (eliminado is null or eliminado = 0)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -34,7 +34,7 @@ public class IdiomaRepository {
 
     public List<Idioma> findAll() {
         List<Idioma> list = new ArrayList<>();
-        String sql = "SELECT * FROM idiomas";
+        String sql = "SELECT * FROM idiomas where (eliminado is null or eliminado = 0)";
         try (PreparedStatement stmt = connection.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
@@ -78,7 +78,7 @@ public class IdiomaRepository {
     }
 
     public void delete(int id) {
-        String sql = "DELETE FROM idiomas WHERE id_idioma = ?";
+        String sql = "UPDATE idiomas SET eliminado = 1 WHERE id_idioma = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();

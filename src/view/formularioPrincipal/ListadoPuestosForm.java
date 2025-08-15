@@ -9,16 +9,22 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import common.WrapLayout;
+import javax.swing.SwingUtilities;
+
+import model.Candidato;
 import model.Puesto;
+import service.CandidatoService;
 import service.PuestoService;
 import view.nuevoCandidato.NuevoCandidatoForm;
 
@@ -39,6 +45,7 @@ public class ListadoPuestosForm extends javax.swing.JInternalFrame {
         }
         
         cargarPuestos();
+
     }
 
     /**
@@ -128,7 +135,17 @@ public class ListadoPuestosForm extends javax.swing.JInternalFrame {
     }
 
     private void mostrarDetalles(Puesto puesto){
-        
+
+        DetallesPuestoForm detalles=new DetallesPuestoForm(puesto);
+
+        getDesktopPane().add(detalles);
+        detalles.setVisible(true);
+        detalles.show();
+
+        SwingUtilities.invokeLater(() -> {
+            getParent().revalidate();
+            getParent().repaint();
+        });
     }
 
     private void aplicarVacante(Puesto puesto){
@@ -137,9 +154,14 @@ public class ListadoPuestosForm extends javax.swing.JInternalFrame {
         getDesktopPane().add(nuevoCandidatoForm);
         nuevoCandidatoForm.show();
         nuevoCandidatoForm.setVisible(true);
+        
+        SwingUtilities.invokeLater(() -> {
+            getParent().revalidate();
+            getParent().repaint();
+        });
     }
 
-    private JPanel crearCardPuesto(Puesto puesto) {
+    private JPanel crearCardPuesto(Puesto puesto) { 
         JPanel card = new JPanel();
         card.setPreferredSize(new Dimension(200, 100)); // Tamaño del card
         card.setBorder(BorderFactory.createLineBorder(Color.GRAY));

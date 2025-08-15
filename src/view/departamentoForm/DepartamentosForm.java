@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package view;
+package view.departamentoForm;
 import model.Departamento;
 import service.DepartamentoService;
 import javax.swing.*;
@@ -19,14 +19,15 @@ import javax.swing.event.ListSelectionListener;
  *
  * @author LENOVO
  */
-public class DepartamentosForm extends javax.swing.JFrame {
+public class DepartamentosForm extends javax.swing.JInternalFrame {
   private DefaultTableModel tblModel;
     private int filaSeleccionada = -1;
     private DepartamentoService departamentoService;
     private List<Departamento> listaDepartamentos;
 
     public DepartamentosForm() {
-               
+            departamentoService = new DepartamentoService();
+        
         initComponents();
         initTable();
         setupTableListener(); // Configurar el listener una sola vez
@@ -116,8 +117,9 @@ public class DepartamentosForm extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         tblDepartamentos = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(0, 0, 0));
+        setClosable(true);
 
         jPanel3.setPreferredSize(new java.awt.Dimension(550, 170));
         jPanel3.setLayout(new java.awt.BorderLayout());
@@ -279,37 +281,37 @@ public class DepartamentosForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-    int filaSeleccionada = tblDepartamentos.getSelectedRow();
-    if (filaSeleccionada < 0) {
-        JOptionPane.showMessageDialog(this, "Seleccione un departamento para editar.");
-        return;
-    }
+        int filaSeleccionada = tblDepartamentos.getSelectedRow();
+        if (filaSeleccionada < 0) {
+            JOptionPane.showMessageDialog(this, "Seleccione un departamento para editar.");
+            return;
+        }
 
-    Departamento departamentoSeleccionado = listaDepartamentos.get(filaSeleccionada);
-    EditarDepartamentoForm editarForm = new EditarDepartamentoForm(departamentoSeleccionado, this);
-    editarForm.setVisible(true);
+        Departamento departamentoSeleccionado = listaDepartamentos.get(filaSeleccionada);
+        EditarDepartamentoForm editarForm = new EditarDepartamentoForm(departamentoSeleccionado, this);
+        editarForm.setVisible(true);
     
     }//GEN-LAST:event_btnEditarActionPerformed
     
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-    int fila = tblDepartamentos.getSelectedRow();
-    if (fila < 0) {
-        JOptionPane.showMessageDialog(this, "Seleccione una fila para eliminar.");
-        return;
-    }
-
-    int id = (int) tblModel.getValueAt(fila, 0);
-    Departamento departamento = departamentoService.findById(id);
-
-    int conf = JOptionPane.showConfirmDialog(this, "¿Está seguro de eliminar este departamento?", "Confirmar", JOptionPane.YES_NO_OPTION);
-    if (conf == JOptionPane.YES_OPTION) {
-        if (departamentoService.delete(departamento)) {
-            cargarDepartamentosEnTabla();
-            limpiarCampos();
-        } else {
-            JOptionPane.showMessageDialog(this, "Error al eliminar.");
+        int fila = tblDepartamentos.getSelectedRow();
+        if (fila < 0) {
+            JOptionPane.showMessageDialog(this, "Seleccione una fila para eliminar.");
+            return;
         }
-    }                                                                  
+
+        int id = (int) tblModel.getValueAt(fila, 0);
+        Departamento departamento = departamentoService.findById(id);
+
+        int conf = JOptionPane.showConfirmDialog(this, "¿Está seguro de eliminar este departamento?", "Confirmar", JOptionPane.YES_NO_OPTION);
+        if (conf == JOptionPane.YES_OPTION) {
+            if (departamentoService.delete(departamento)) {
+                cargarDepartamentosEnTabla();
+                limpiarCampos();
+            } else {
+                JOptionPane.showMessageDialog(this, "Error al eliminar.");
+            }
+        }                                                                  
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void txtNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreActionPerformed

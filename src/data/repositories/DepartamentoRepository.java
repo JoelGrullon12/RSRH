@@ -22,7 +22,7 @@ public class DepartamentoRepository{
     }
     
     public Departamento findById(int id) {
-        String sql = "SELECT * FROM departamentos WHERE id_departamento = ?";
+        String sql = "SELECT * FROM departamentos WHERE id_departamento = ? and (eliminado is null or eliminado = 0)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -37,7 +37,7 @@ public class DepartamentoRepository{
     }
     
     public Departamento findByNombre(String nombre) {
-        String sql = "SELECT * FROM departamentos WHERE nombre_departamento = ?";
+        String sql = "SELECT * FROM departamentos WHERE nombre_departamento = ? and (eliminado is null or eliminado = 0)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, nombre);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -53,7 +53,7 @@ public class DepartamentoRepository{
     
     public List<Departamento> findAll() {
         List<Departamento> list = new ArrayList<>();
-        String sql = "SELECT * FROM departamentos";
+        String sql = "SELECT * FROM departamentos where (eliminado is null or eliminado = 0)";
         try (PreparedStatement stmt = connection.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
 
@@ -98,7 +98,7 @@ public class DepartamentoRepository{
     }
     
     public void delete(int id) {
-        String sql = "DELETE FROM departamentos WHERE id_departamento = ?";
+        String sql = "UPDATE departamentos SET eliminado = 1 WHERE id_departamento = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();

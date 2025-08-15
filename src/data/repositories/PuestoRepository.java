@@ -21,7 +21,7 @@ public class PuestoRepository {
     }
 
     public Puesto findById(int id) {
-        String sql = "SELECT * FROM puestos WHERE id_puesto = ?";
+        String sql = "SELECT * FROM puestos WHERE id_puesto = ? and (eliminado is null or eliminado = 0)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -34,7 +34,7 @@ public class PuestoRepository {
 
     public List<Puesto> findAll() {
         List<Puesto> list = new ArrayList<>();
-        String sql = "SELECT * FROM puestos";
+        String sql = "SELECT * FROM puestos where (eliminado is null or eliminado = 0)";
         try (PreparedStatement stmt = connection.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
@@ -90,7 +90,7 @@ public class PuestoRepository {
     }
 
     public void delete(int id) {
-        String sql = "DELETE FROM puestos WHERE id_puesto = ?";
+        String sql = "UPDATE puestos SET eliminado = 1 WHERE id_puesto = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();

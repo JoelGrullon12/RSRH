@@ -21,7 +21,7 @@ public class RecomendacionRepository {
     }
 
     public Recomendacion findById(int id) {
-        String sql = "SELECT * FROM recomendaciones WHERE id_recomendacion = ?";
+        String sql = "SELECT * FROM recomendaciones WHERE id_recomendacion = ? and (eliminado is null or eliminado = 0)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -34,12 +34,28 @@ public class RecomendacionRepository {
 
     public List<Recomendacion> findAll() {
         List<Recomendacion> list = new ArrayList<>();
-        String sql = "SELECT * FROM recomendaciones";
+        String sql = "SELECT * FROM recomendaciones where (eliminado is null or eliminado = 0)";
         try (PreparedStatement stmt = connection.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 list.add(mapRow(rs));
             }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error listando recomendaciones", e);
+        }
+        return list;
+    }
+
+    public List<Recomendacion> findAllByCandidatoId(int candidatoId) {
+        List<Recomendacion> list = new ArrayList<>();
+        String sql = "SELECT * FROM recomendaciones where candidato_id =? and (eliminado is null or eliminado = 0)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, candidatoId);
+            try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                list.add(mapRow(rs));
+            }
+        }
         } catch (SQLException e) {
             throw new RuntimeException("Error listando recomendaciones", e);
         }
@@ -86,7 +102,7 @@ public class RecomendacionRepository {
     }
 
     public void delete(int id) {
-        String sql = "DELETE FROM recomendaciones WHERE id_recomendacion = ?";
+        String sql = "UPDATE recomendaciones SET eliminado = 1 WHERE id_recomendacion = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();

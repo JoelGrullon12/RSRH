@@ -11,6 +11,7 @@ import java.util.List;
 import model.BaseEntity;
 import model.Candidato;
 import model.Idioma;
+import model.IdiomaCandidato;
 
 /**
  *
@@ -31,10 +32,42 @@ public class CandidatoService implements IService<Candidato> {
         }
     }
 
+    public List<Candidato> getAllByPuesto(int idPuesto) {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            return uow.candidatos().findAllByPuesto(idPuesto);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return List.of();
+        }
+    }
+
     @Override
     public Candidato findById(int id) {
         try (UnitOfWork uow = new UnitOfWork()) {
             return uow.candidatos().findById(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Candidato findByIdWithRelatioships(int id) {
+        try (UnitOfWork uow = new UnitOfWork()) {
+            Candidato cand= uow.candidatos().findById(id);
+
+            cand.setCapacitaciones(uow.capacitaciones().findAllByCandidatoId(id));
+            cand.setCompetencias(uow.competencias().findAllByCandidatoId(id));
+            cand.setExperienciasLaborales(uow.experienciasLaborales().findAllByCandidatoId(id));
+            cand.setRecomendaciones(uow.recomendaciones().findAllByCandidatoId(id));
+            cand.setIdiomas(uow.idiomasCandidatos().findAllByCandidatoId(id));
+
+            for (IdiomaCandidato idi : cand.getIdiomas()) {
+                idi.setIdioma(uow.idiomas().findById(idi.getIdiomaId()));
+                idi.setNivelIdioma(uow.nivelesIdioma().findById(idi.getNivelId()));
+            }
+
+            return cand;
+
         } catch (SQLException e) {
             e.printStackTrace();
             return null;

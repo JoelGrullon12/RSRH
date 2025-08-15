@@ -44,6 +44,8 @@ public class LoginForm extends javax.swing.JDialog {
         btnIngresar = new java.awt.Button();
         jLabel4 = new javax.swing.JLabel();
         btnCancelar = new java.awt.Button();
+        btnInvitado = new java.awt.Button();
+        jPanel1 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setAlwaysOnTop(true);
@@ -54,27 +56,27 @@ public class LoginForm extends javax.swing.JDialog {
                 formWindowClosed(evt);
             }
         });
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         jLabel1.setText("Iniciar Sesion");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(102, 11, -1, -1));
+        getContentPane().add(txtUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 50, 200, -1));
+        getContentPane().add(txtContrasenia, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 80, 200, -1));
 
         jLabel3.setText("Usuario");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 55, -1, -1));
 
-        txtContrasenia.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnIngresarActionPerformed(evt);
-            }
-        });
-
-        btnIngresar.setActionCommand("");
         btnIngresar.setLabel("Ingresar");
         btnIngresar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnIngresarActionPerformed(evt);
             }
         });
+        getContentPane().add(btnIngresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 130, -1, -1));
 
         jLabel4.setText("Contraseña");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 85, -1, -1));
 
         btnCancelar.setLabel("Cancelar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -82,56 +84,17 @@ public class LoginForm extends javax.swing.JDialog {
                 btnCancelarActionPerformed(evt);
             }
         });
+        getContentPane().add(btnCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 130, -1, -1));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(40, 40, 40)
-                        .addComponent(jLabel3)
-                        .addGap(10, 10, 10)
-                        .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(jLabel4)
-                        .addGap(10, 10, 10)
-                        .addComponent(txtContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(70, 70, 70)
-                        .addComponent(btnIngresar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(37, 37, 37)
-                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(102, 102, 102)
-                        .addComponent(jLabel1)))
-                .addContainerGap(45, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(11, 11, 11)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(5, 5, 5)
-                        .addComponent(jLabel3))
-                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(4, 4, 4)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(5, 5, 5)
-                        .addComponent(jLabel4))
-                    .addComponent(txtContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(24, 24, 24)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnIngresar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(33, Short.MAX_VALUE))
-        );
+        btnInvitado.setActionCommand("Ingresar Como Invitado");
+        btnInvitado.setLabel("Ingresar Como Invitado");
+        btnInvitado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnInvitadoActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnInvitado, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 180, -1, -1));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 220, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -176,9 +139,21 @@ public class LoginForm extends javax.swing.JDialog {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        // TODO add your handling code here:
         this.dispose();
     }//GEN-LAST:event_formWindowClosed
+
+    private void btnInvitadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInvitadoActionPerformed
+        this.dispose();
+        SwingUtilities.invokeLater(() -> {
+                MainPage mdi = new MainPage();
+                mdi.setVisible(true);
+                mdi.setExtendedState(JFrame.MAXIMIZED_BOTH); // Opcional: maximizar
+                mdi.toFront();                                // Asegurar que esté al frente
+                mdi.requestFocus();
+                mdi.setAlwaysOnTop(true);                     // Forzar al frente temporalmente
+                mdi.setAlwaysOnTop(false);
+            });
+    }//GEN-LAST:event_btnInvitadoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -228,9 +203,11 @@ public class LoginForm extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Button btnCancelar;
     private java.awt.Button btnIngresar;
+    private java.awt.Button btnInvitado;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPasswordField txtContrasenia;
     private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables

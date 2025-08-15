@@ -22,7 +22,7 @@ public class CapacitacionRepository {
     }
 
     public Capacitacion findById(int id) {
-        String sql = "SELECT * FROM capacitaciones WHERE id_capacitacion = ?";
+        String sql = "SELECT * FROM capacitaciones WHERE id_capacitacion = ? and (eliminado is null or eliminado=0)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -35,9 +35,9 @@ public class CapacitacionRepository {
 
     public List<Capacitacion> findAll() {
         List<Capacitacion> list = new ArrayList<>();
-        String sql = "SELECT * FROM capacitaciones";
+        String sql = "SELECT * FROM capacitaciones where (eliminado is null or eliminado = 0)";
         try (PreparedStatement stmt = connection.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+                ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 list.add(mapRow(rs));
             }
@@ -47,9 +47,26 @@ public class CapacitacionRepository {
         return list;
     }
 
+    public List<Capacitacion> findAllByCandidatoId(int candidatoId) {
+        List<Capacitacion> list = new ArrayList<>();
+        String sql = "SELECT * FROM capacitaciones where candidato_id = ? and (eliminado is null or eliminado = 0)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, candidatoId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    list.add(mapRow(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error listando capacitaciones", e);
+        }
+        return list;
+    }
+
     public void save(Capacitacion c) {
-        String sql = "INSERT INTO capacitaciones(nombre_capacitacion, descripcion, nivel_id, fecha_desde, fecha_hasta, institucion, candidato_id, eliminado) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO capacitaciones(nombre_capacitacion, descripcion, nivel_id, fecha_desde, fecha_hasta, institucion, candidato_id, eliminado) "
+                +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, c.getNombreCapacitacion());
             stmt.setString(2, c.getDescripcion());
@@ -80,8 +97,9 @@ public class CapacitacionRepository {
     }
 
     public void update(Capacitacion c) {
-        String sql = "UPDATE capacitaciones SET nombre_capacitacion = ?, descripcion = ?, nivel_id = ?, fecha_desde = ?, fecha_hasta = ?, institucion = ?, candidato_id = ?, eliminado = ? " +
-                     "WHERE id_capacitacion = ?";
+        String sql = "UPDATE capacitaciones SET nombre_capacitacion = ?, descripcion = ?, nivel_id = ?, fecha_desde = ?, fecha_hasta = ?, institucion = ?, candidato_id = ?, eliminado = ? "
+                +
+                "WHERE id_capacitacion = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, c.getNombreCapacitacion());
             stmt.setString(2, c.getDescripcion());
@@ -107,7 +125,7 @@ public class CapacitacionRepository {
     }
 
     public void delete(int id) {
-        String sql = "DELETE FROM capacitaciones WHERE id_capacitacion = ?";
+        String sql = "UPDATE capacitaciones SET eliminado = 1 WHERE id_capacitacion = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();
@@ -124,10 +142,12 @@ public class CapacitacionRepository {
         c.setNivelId(rs.getInt("nivel_id"));
 
         LocalDate desde = rs.getObject("fecha_desde", LocalDate.class);
-        if (desde != null) c.setFechaDesde(desde);
+        if (desde != null)
+            c.setFechaDesde(desde);
 
         LocalDate hasta = rs.getObject("fecha_hasta", LocalDate.class);
-        if (hasta != null) c.setFechaHasta(hasta);
+        if (hasta != null)
+            c.setFechaHasta(hasta);
 
         c.setInstitucion(rs.getString("institucion"));
         c.setCandidatoId(rs.getInt("candidato_id"));
