@@ -26,13 +26,7 @@ public class DepartamentosForm extends javax.swing.JFrame {
     private List<Departamento> listaDepartamentos;
 
     public DepartamentosForm() {
-        try {
-            departamentoService = new DepartamentoService();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error al conectar con la base de datos: " + e.getMessage());
-        }
-        
+               
         initComponents();
         initTable();
         setupTableListener(); // Configurar el listener una sola vez

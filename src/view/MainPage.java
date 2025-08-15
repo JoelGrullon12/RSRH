@@ -5,7 +5,7 @@
 package view;
 
 import javax.swing.JLayeredPane;
-
+import model.Puesto;
 import view.formularioPrincipal.ListadoPuestosForm;
 import view.nuevoCandidato.NuevoCandidatoForm;
 
@@ -156,7 +156,7 @@ mainDesktop.setLayer(listado, JLayeredPane.FRAME_CONTENT_LAYER);
 
     private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMenuItemActionPerformed
         // TODO add your handling code here:
-        NuevoCandidatoForm nuevoCandidato=new NuevoCandidatoForm(mainDesktop);
+        NuevoCandidatoForm nuevoCandidato=new NuevoCandidatoForm(mainDesktop, new Puesto());
         mainDesktop.add(nuevoCandidato);
         nuevoCandidato.setVisible(true);
     }//GEN-LAST:event_openMenuItemActionPerformed

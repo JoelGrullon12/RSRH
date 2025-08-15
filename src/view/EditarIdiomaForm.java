@@ -26,11 +26,7 @@ public class EditarIdiomaForm extends javax.swing.JFrame {
 
         initComponents();
 
-        try {
-            this.idiomaService = new IdiomaService();
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Error al conectar con la base de datos: " + e.getMessage());
-        }
+      
 
         cargarDatos();
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);

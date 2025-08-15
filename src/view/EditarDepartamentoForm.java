@@ -32,11 +32,7 @@ public class EditarDepartamentoForm extends javax.swing.JFrame {
         
         initComponents();
         
-        try {
-            this.departamentoService = new DepartamentoService();
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Error al conectar con la base de datos: " + e.getMessage());
-        }
+        
 
         cargarDatos(); // Cargar datos en los campos de texto
         

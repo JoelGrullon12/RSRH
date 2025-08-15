@@ -24,6 +24,7 @@ import javax.swing.event.ListSelectionListener;
  * @author LENOVO
  */
 public class IdiomaForm extends javax.swing.JFrame {
+    
      private DefaultTableModel tblModel;
     private int filaSeleccionada = -1;
     private final IdiomaService idiomaService;
@@ -73,7 +74,7 @@ public class IdiomaForm extends javax.swing.JFrame {
                 tblModel.addRow(new Object[]{
                     idi.getIdIdioma(), 
                     idi.getNombreIdioma(), 
-                    idi.getNivel() != null ? idi.getNivel() : ""
+                     
                 });
             }
             
@@ -88,7 +89,7 @@ public class IdiomaForm extends javax.swing.JFrame {
 
     private void limpiarCampos() {
         jTextField1.setText(""); 
-        jComboBox1.setSelectedIndex(0); 
+         
         FrmTable.clearSelection(); 
     }
 
@@ -114,8 +115,6 @@ public class IdiomaForm extends javax.swing.JFrame {
         jPanel5 = new javax.swing.JPanel();
         Idiomalabel = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
-        Nivellabel = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -171,28 +170,6 @@ public class IdiomaForm extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(10, 5, 10, 5);
         jPanel5.add(jTextField1, gridBagConstraints);
-
-        Nivellabel.setText("Nivel:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
-        jPanel5.add(Nivellabel, gridBagConstraints);
-
-        jComboBox1.setEditable(true);
-        jComboBox1.setFont(new java.awt.Font("Serif", 0, 12)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Básico", "Básico avanzado", "Intermedio bajo", "Intermedio avanzado", "Intermedio", "Avanzado bajo", "Avanzado ", "Nativo" }));
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 6;
-        jPanel5.add(jComboBox1, gridBagConstraints);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI Light", 1, 18)); // NOI18N
         jLabel2.setText("Gestión de Idiomas");
@@ -298,13 +275,9 @@ editarIdiomaForm.setVisible(true);
 
     }//GEN-LAST:event_EditbtnActionPerformed
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
-
     private void AddbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddbtnActionPerformed
       String nombre = jTextField1.getText().trim();
-    String nivel = jComboBox1.getSelectedItem().toString();
+   
 
     if (nombre.isEmpty()) {
         JOptionPane.showMessageDialog(this, "Debe escribir un idioma.");
@@ -313,7 +286,7 @@ editarIdiomaForm.setVisible(true);
 
     Idioma idioma = new Idioma();
     idioma.setNombreIdioma(nombre);
-    idioma.setNivel(nivel); 
+     
 
     if (idiomaService.insert(idioma)) {
         cargarIdiomasEnTabla();
@@ -367,9 +340,7 @@ editarIdiomaForm.setVisible(true);
     private javax.swing.JButton Editbtn;
     private javax.swing.JTable FrmTable;
     private javax.swing.JLabel Idiomalabel;
-    private javax.swing.JLabel Nivellabel;
     private javax.swing.JButton deletebtn;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
